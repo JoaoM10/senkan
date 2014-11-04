@@ -6,7 +6,7 @@
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<link rel="icon" href="css/favicon.ico" type="image/x-icon">
+		<link rel="icon" href="media/favicon.ico" type="image/x-icon">
 
 		<title>Senkan</title>
 
@@ -67,6 +67,9 @@
 				</section>
 				<section id="play" ng-show="tabCtr.isSet(2)">
 					<h1>Play</h1>
+
+
+
 				</section>
 				<section id="hall-fame" ng-show="tabCtr.isSet(3)">
 					<h1>Hall of Fame</h1>
@@ -95,9 +98,43 @@
 				</section>
 				<section id="sign-up" ng-show="tabCtr.isSet(4)">
 					<h1>Sign Up</h1>
+					<div class="row mt50">
+						<div class="col-md-4 col-md-offset-4 jumbotron">
+							<form role="form">
+								<div class="form-group">
+									<label for="username">Username</label>
+									<input type="text" class="form-control" id="username" placeholder="Enter username">
+								</div>
+								<div class="form-group">
+									<label for="email">Email</label>
+									<input type="email" class="form-control" id="email" placeholder="Enter email">
+								</div>
+								<div class="form-group">
+									<label for="password">Password</label>
+									<input type="password" class="form-control" id="password" placeholder="Enter password">
+								</div>
+  								<button class="btn btn-primary btn-block"> Sign Up</button>
+							</form>
+						</div>
+					</div>
 				</section>
 				<section id="sign-in" ng-show="tabCtr.isSet(5)">
 					<h1>Sign In</h1>
+					<div class="row mt50">
+						<div class="col-md-4 col-md-offset-4 jumbotron">
+							<form role="form">
+								<div class="form-group">
+									<label for="username">Username</label>
+									<input type="text" class="form-control" id="username" placeholder="Enter username">
+								</div>
+								<div class="form-group">
+									<label for="password">Password</label>
+									<input type="password" class="form-control" id="password" placeholder="Enter password">
+								</div>
+  								<button class="btn btn-primary btn-block"> Sign In</button>
+							</form>
+						</div>
+					</div>
 				</section>
 			</div>
 			<footer class="text-center">
