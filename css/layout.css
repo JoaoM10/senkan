@@ -2,7 +2,7 @@
 
 body {
 	font-family: 'Open Sans', 'sans-serif';
-	background-color: rgb(245,245,245);
+	background-color: rgb(255,255,255);
     font-size: 12px;
 }
 
@@ -45,4 +45,23 @@ footer {
 	margin-top: 20px;
 	margin-bottom: 20px;
 	text-align: center;
+}
+
+#main-fame {
+	text-align: center;
+}
+
+#table-fame {
+	text-align: left;
+}
+
+th {
+	font-weight: bold;
+} 
+
+.mt50 {
+	margin-top: 50px;
+}
+.mt70 {
+	margin-top: 70px;
 }
