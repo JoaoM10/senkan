@@ -10,27 +10,38 @@
 
 		<title>Senkan</title>
 
-
 		<link rel="stylesheet" href="css/reset.css">
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/layout.css">
 
-		<!-- Bootstrap -->
-		<link href="css/bootstrap.min.css" rel="stylesheet">
-
-		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 		<!--[if lt IE 9]>
 			<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
 			<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 		<![endif]-->
 
-		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-		<!-- Include all compiled plugins (below), or include individual files as needed -->
-		<script src="js/bootstrap.min.js"></script>
 	</head>
 	<body>
-		
-
-
+		<div class="container">
+			<header>
+				<img src="http://placehold.it/350x100" />
+				<section id="menu">
+					<button class="btn btn-info btn-menu">Play</button>
+					<button class="btn btn-info btn-menu">Hall of Fame</button>
+					<button class="btn btn-info btn-menu">Help</button>
+				</section>
+				<section id="menu-login">
+					<a href="#">Register</a> | <a href="#">Login</a>
+				</section>
+			</header>
+			<section id="main">
+				Content goes here...
+			</section>
+			<hr>
+			<footer>
+				Senkan Productions
+			</footer>
+		</div>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<script src="js/angular.min.js"></script>
 	</body>
 </html>
