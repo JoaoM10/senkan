@@ -6,6 +6,14 @@ body {
     font-size: 12px;
 }
 
+hr {
+	height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 1em 0;
+    padding: 0;
+}
+
 .mt50 {
 	margin-top: 50px;
 }
@@ -16,4 +24,23 @@ body {
 
 .mh350 {
 	min-height: 350px;
+}
+
+#table-hall-fame thead {
+	font-size: 1.2em;
+}
+
+#table-hall-fame tbody tr:first-child td {
+	background-color: rgba(255, 215, 0, 0.6);
+	font-weight: bold;
+}
+
+#table-hall-fame tbody tr:nth-child(2) td {
+	background-color: rgba(192, 192, 192, 0.6);
+	font-weight: bold;
+}
+
+#table-hall-fame tbody tr:nth-child(3) td {
+	background-color: rgba(205, 127, 58, 0.6);
+	font-weight: bold;
 }
