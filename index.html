@@ -65,9 +65,9 @@
 						<button class="btn btn-primary btn-lg" ng-click="tabCtr.setTab(2)">Play now!</button>
 					</div>
 				</section>
-				<section id="play" ng-show="tabCtr.isSet(2)">
+				<section id="play" ng-show="tabCtr.isSet(2)" ng-controller="GameController as gameCtr">
 					<h1>Play</h1>
-					<div class="row mt50">
+					<div id="game-pre" class="row mt50" ng-show="gameCtr.isSet(1)">
 						<div class="col-md-4 col-md-offset-2">
 							<img src="http://placehold.it/350x200" width="100%" />
 						</div>
@@ -75,9 +75,23 @@
 							<h3>
 								Choose you opponent:
 							</h3>
-							<button class="btn btn-primary btn-block">Play against <strong>Ancel</strong></button>
-							<button class="btn btn-primary btn-block">Find opponent</button>
+							<button class="btn btn-primary btn-block" ng-click="gameCtr.setMode(2)">Play against <strong>Ancel</strong></button>
+							<button class="btn btn-primary btn-block" ng-click="gameCtr.setMode(3)">Find opponent</button>
 						</div>
+					</div>
+					<div id="game-bot" class="row text-center" ng-show="gameCtr.isSet(2)">
+						<h3>Playing against Ancel</h3>
+						<div class="row mt50">
+							<div class="col-md-4 col-md-offset-2">
+								<div id="wrapper"></div>
+							</div>
+							<div class="col-md-4">
+								<p><strong>Drag & Drop the ships on the grid:</strong></p>
+							</div>
+						</div>
+					</div>
+					<div id="game-net" class="row mt50 text-center" ng-show="gameCtr.isSet(3)">
+						<h3>Not available yet!</h3>
 					</div>
 				</section>
 				<section id="hall-fame" ng-show="tabCtr.isSet(3)">
@@ -189,8 +203,8 @@
 					</div>
 				</section>
 			</div>
-			<hr class="mt50">
-			<footer class="text-center">
+			<footer class="text-center mt50">
+				<hr>
 				<p>Developed by <a href="#">João Ramos</a> e <a href="#">Filipe Figueiredo</a></p>
 			</footer>
 		</div>

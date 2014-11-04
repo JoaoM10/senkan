@@ -26,6 +26,8 @@ hr {
 	min-height: 350px;
 }
 
+
+
 #table-hall-fame thead {
 	font-size: 1.2em;
 }
@@ -43,4 +45,29 @@ hr {
 #table-hall-fame tbody tr:nth-child(3) td {
 	background-color: rgba(205, 127, 58, 0.6);
 	font-weight: bold;
+}
+
+
+
+.square {
+	width: 30px;
+	height: 30px;
+	background-color: rgb(59, 122, 219);
+	border: 1px solid black;
+	float: left;
+}
+
+.square-head {
+	background-color: rgb(241, 241, 241);
+	border: 0.5px solid black;
+}
+
+.square-corner {
+	background-color: transparent;
+	border: none;
+}
+ 
+#wrapper {
+	width: 334px;
+	height: 334px;
 }
