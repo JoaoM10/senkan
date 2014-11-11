@@ -48,6 +48,10 @@ hr {
 }
 
 
+.logo {
+	width: 100%;
+	height: auto;
+}
 
 .square {
 	width: 30px;
