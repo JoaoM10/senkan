@@ -42,6 +42,7 @@
       }
     }
 
+    $("#wrapper").append("<script type=\"text/javascript\">$(function(){ $('.square').droppable({ drop: handleDrop }); });</script>");
   }
 
 })();

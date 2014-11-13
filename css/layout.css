@@ -14,19 +14,20 @@ hr {
     padding: 0;
 }
 
-.mt50 {
-	margin-top: 50px;
+.mt5 { margin-top: 5px; }
+.mt10 { margin-top: 10px; }
+.mt20 { margin-top: 20px; }
+.mt50 { margin-top: 50px; }
+.mt70 { margin-top: 70px; }
+
+.mh350 { min-height: 350px; }
+
+.logo {
+	width: 100%;
+	height: auto;
 }
 
-.mt70 {
-	margin-top: 70px;
-}
-
-.mh350 {
-	min-height: 350px;
-}
-
-
+/* Hall of Fame */
 
 #table-hall-fame thead {
 	font-size: 1.2em;
@@ -48,10 +49,8 @@ hr {
 }
 
 
-.logo {
-	width: 100%;
-	height: auto;
-}
+
+/* Game board */
 
 .square {
 	width: 30px;
