@@ -1,4 +1,4 @@
-(function() {
+(function(){
   var app = angular.module('Senkan', []);
   gameMode = 1;
 
@@ -19,8 +19,11 @@
 
     this.setMode = function(newValue){
       gameMode = newValue;
-      if(gameMode === 2)
-        init_game_board();
+      if(gameMode === 2){
+        $('#config-space').html('<div id="ships-wrapper"></div>');
+        $(create_board('config-board', true)).insertBefore('#ships-wrapper');
+        $('#ships-wrapper').append(create_ships());
+      }
     };
 
     this.isSet = function(modeName){
@@ -29,20 +32,5 @@
   });
 
 
-  function init_game_board() {
-    $("#wrapper").empty();
-
-    $("#wrapper").append("<div class=\"square square-corner\"></div>");
-    for(i = 1; i <= 10; i ++)
-      $("#wrapper").append("<div class=\"square square-head\">" + i.toString() + "</div>");
-    for(i = 0; i < 10; i ++){
-      $("#wrapper").append("<div class=\"square square-head\">" + String.fromCharCode("A".charCodeAt(0) + i) + "</div>");
-      for(j = 0; j < 10; j ++){
-        $("#wrapper").append("<div class=\"square\"></div>");
-      }
-    }
-
-    $("#wrapper").append("<script type=\"text/javascript\">$(function(){ $('.square').droppable({ drop: handleDrop }); });</script>");
-  }
 
 })();

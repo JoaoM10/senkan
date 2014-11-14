@@ -52,25 +52,61 @@ hr {
 
 /* Game board */
 
-.square {
+#ships-wrapper {
+	width: 155px;
+	display: inline-block;
+	margin-left: 50px;
+	vertical-align: top;
+}
+
+#ships-wrapper img {
+	display: inline-block;
+	cursor: move;
+}
+
+.ship-area {
+	font-size: 1.1em;
+	margin-bottom: 10px;
+}
+
+.game-board {
+	border-collapse: collapse;
+	display: inline-block;
+	margin-right: 10px;
+}
+
+.game-board td, th {
+	border: 1px solid black;
+	padding: 0;
 	width: 30px;
 	height: 30px;
-	background-color: rgb(59, 122, 219);
-	border: 1px solid black;
-	float: left;
+	font-size: 1.2em;
+	vertical-align: top;
+	text-align: center;
 }
 
-.square-head {
-	background-color: rgb(241, 241, 241);
-	border: 0.5px solid black;
+.game-board td {
+	background-color: #3B7ADB;
+	text-align: center;
 }
 
-.square-corner {
-	background-color: transparent;
-	border: none;
+.game-board th {
+	background-color: #6db3f2;
 }
- 
-#wrapper {
-	width: 334px;
-	height: 334px;
+
+.over {
+	background-color: #66b2ff !important;
+}
+
+#ships-wrapper img.used {
+	opacity: 0.5;
+	cursor: default;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	-webkit-user-drag: none;
+	-moz-user-drag: none;
+	-ms-user-drag: none;
+	user-drag: none;
 }
