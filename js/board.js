@@ -6,8 +6,7 @@ var last_column = 1;
 var last_size = 0;
 
 var config_board;
-var ships_placed = 0;
-
+var ships_pos;
 
 function create_board(id, wl = false){
   var table = document.createElement('table');
@@ -25,6 +24,9 @@ function create_board(id, wl = false){
   config_board = new Array(11);
   for(var i = 1; i <= 10; i++)
     config_board[i] = new Array(11);
+  ships_pos = new Array();
+  for(var i = 0; i < ships_list.length; i ++)
+    ships_pos[ships_list[i].id] = null;
   for(var i = 1; i <= 10; i ++){
     var tr = document.createElement('tr');
     var th = document.createElement('th');
@@ -71,7 +73,7 @@ function dragStart(e){
 function check_ship_place(linec, column, ship_size){
   if(column + ship_size - 1 <= 10){
     for(var i = 0; i < ship_size; i ++)
-      if(config_board[linec.charCodeAt(0) - 64][column + i] == 1)
+      if(config_board[linec.charCodeAt(0) - 64][column + i] !== 0)
         return false;
   }
   else
@@ -135,8 +137,6 @@ function drop(e){
   
   e.preventDefault();
 
-  ships_placed += 1;
-
   var coord = $(this).attr('data-coord');
   var linec = coord.substring(0, 1);
   var column = parseInt(coord.substring(1));
@@ -163,6 +163,7 @@ function drop(e){
         config_board[linec.charCodeAt(0) - 64][column + j] = i + 1;
       }
       
+      ships_pos[ship] = 'H' + linec + (column + j);
     }
   }
 

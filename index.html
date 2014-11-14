@@ -24,31 +24,31 @@
 			<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
 				<div class="container">
 					<div class="navbar-header">
-						<a class="navbar-brand" href ng-click="tabCtr.setTab(1)">
+						<a class="navbar-brand" href="#home" ng-click="tabCtr.setTab(1)">
 							Senkan
 						</a>
 					</div>
 					<div id="navbar" class="navbar-collapse collapse">
 						<ul class="nav navbar-nav">
 							<li class="active">
-								<a href ng-click="tabCtr.setTab(2)">
+								<a href="#play" ng-click="tabCtr.setTab(2)">
 									Play
 								</a>
 							</li>
 							<li>
-								<a href  ng-click="tabCtr.setTab(3)">
+								<a href="#hall-of-fame" ng-click="tabCtr.setTab(3)">
 									Hall of Fame
 								</a>
 							</li>
 						</ul>
 						<ul class="nav navbar-nav navbar-right">
 							<li>
-								<a href  ng-click="tabCtr.setTab(4)">
+								<a href="#sign-up" ng-click="tabCtr.setTab(4)">
 									Sign Up
 								</a>
 							</li>
 							<li class="active">
-								<a href ng-click="tabCtr.setTab(5)">
+								<a href="#sign-in" ng-click="tabCtr.setTab(5)">
 									Sign In
 								</a>
 							</li>
@@ -82,21 +82,21 @@
 							<h3>
 								Choose you opponent:
 							</h3>
-							<button class="btn btn-primary btn-block" ng-click="gameCtr.setMode(2)">Play against <strong>Ancel</strong></button>
-							<button class="btn btn-primary btn-block" ng-click="gameCtr.setMode(3)">Find opponent</button>
+							<a href="#play-bot" class="btn btn-primary btn-block" ng-click="gameCtr.setMode(2)">Play against <strong>Ancel</strong></a>
+							<a href="#play-online" class="btn btn-primary btn-block" ng-click="gameCtr.setMode(3)">Find opponent</a>
 						</div>
 					</div>
 					<div id="game-bot" class="row text-center" ng-show="gameCtr.isSet(2)">
 						<h3>Playing against Ancel</h3>
-						<div class="row mt50" id="config-space">
+						<div class="row mt20 info">
+							<p>Firstly, you have to place your ships on the board using our awesome drag and drop system.</p>
+						</div>
+						<div class="row mt20" id="config-space">
 							<!-- Game board -->
 							<div id="ships-wrapper"></div>
 						</div>
 						<div class="row mt20">
-							<div class="col-md-2 col-md-offset-4">
-								<button class="btn btn-primary btn-block" ng-click="gameCtr.setMode(4)">Random</button>
-							</div>
-							<div class="col-md-2">
+							<div class="col-md-2 col-md-offset-5">
 								<button class="btn btn-primary btn-block" ng-click="gameCtr.setMode(4)">Start</button>
 							</div>
 						</div>

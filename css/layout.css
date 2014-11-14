@@ -27,6 +27,11 @@ hr {
 	height: auto;
 }
 
+.info {
+	font-size: 1.2em;
+	font-weight: bold;
+}
+
 /* Hall of Fame */
 
 #table-hall-fame thead {
@@ -78,8 +83,8 @@ hr {
 .game-board td, th {
 	border: 1px solid black;
 	padding: 0;
-	width: 30px;
-	height: 30px;
+	width: 31px;
+	height: 31px;
 	font-size: 1.2em;
 	vertical-align: top;
 	text-align: center;
