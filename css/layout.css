@@ -22,6 +22,10 @@ hr {
 
 .mh350 { min-height: 350px; }
 
+.full-width {
+	width: 100%;
+}
+
 .logo {
 	width: 100%;
 	height: auto;

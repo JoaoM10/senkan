@@ -22,12 +22,14 @@ function create_board(id, wl = false){
     tr.appendChild(th);
   }
   table.appendChild(tr);
-  config_board = new Array(11);
-  for(var i = 1; i <= 10; i++)
-    config_board[i] = new Array(11);
-  ships_pos = new Array();
-  for(var i = 0; i < ships_list.length; i ++)
-    ships_pos[ships_list[i].id] = null;
+  if(wl){
+    config_board = new Array(11);
+    for(var i = 1; i <= 10; i++)
+      config_board[i] = new Array(11);
+    ships_pos = new Array();
+    for(var i = 0; i < ships_list.length; i ++)
+      ships_pos[ships_list[i].id] = null;
+  }
   for(var i = 1; i <= 10; i ++){
     var tr = document.createElement('tr');
     var th = document.createElement('th');
@@ -45,11 +47,21 @@ function create_board(id, wl = false){
         td.addEventListener('drop', dragEnd, false);
       }
       tr.appendChild(td);
-      config_board[i][j] = 0;
+      if(wl)
+        config_board[i][j] = 0;
     }
     table.appendChild(tr);
   }
   return table;
+}
+
+function check_config_board(){
+  for(var i = 0; i < ships_list.length; i ++)
+    if(ships_pos[ships_list[i].id] === null){
+      alert("missing " + ships_list[i].id);
+      return false;
+    }
+  return true;
 }
 
 function dragStart(e){
@@ -164,7 +176,7 @@ function drop(e){
         config_board[linec.charCodeAt(0) - 64][column + j] = i + 1;
       }
       
-      ships_pos[ship] = 'H' + linec + (column + j);
+      ships_pos[ship] = 'H' + linec + column;
     }
   }
 
