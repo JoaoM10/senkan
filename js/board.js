@@ -4,6 +4,7 @@ var dragObject = null;
 var last_line = 'A';
 var last_column = 1;
 var last_size = 0;
+var last_orientation = 'H';
 
 var config_board;
 var ships_pos;
