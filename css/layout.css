@@ -26,6 +26,14 @@ hr {
 	width: 100%;
 }
 
+.rot90 {
+	transform:          rotate(90deg);
+	-ms-transform:      rotate(90deg);
+	-moz-transform:     rotate(90deg);
+	-webkit-transform:  rotate(90deg);
+	-o-transform:       rotate(90deg);
+}
+
 .logo {
 	width: 100%;
 	height: auto;
@@ -118,4 +126,9 @@ hr {
 	-moz-user-drag: none;
 	-ms-user-drag: none;
 	user-drag: none;
+}
+
+.can-hit:hover {
+	background-image: url("../media/aim.png") !important;
+	cursor: none;
 }

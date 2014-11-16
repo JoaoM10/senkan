@@ -9,7 +9,7 @@ var last_orientation = 'H';
 var config_board;
 var ships_pos;
 
-function create_board(id, wl = false){
+function create_board(id, wl = 0){
   var table = document.createElement('table');
   table.id = id;
   table.className = 'game-board'
@@ -22,10 +22,13 @@ function create_board(id, wl = false){
     tr.appendChild(th);
   }
   table.appendChild(tr);
-  if(wl){
+  if(wl === 1){
     config_board = new Array(11);
-    for(var i = 1; i <= 10; i++)
+    for(var i = 1; i <= 10; i++){
       config_board[i] = new Array(11);
+      for(var j = 1; j <= 10; j ++)
+        config_board[i][j] = 0;
+    }
     ships_pos = new Array();
     for(var i = 0; i < ships_list.length; i ++)
       ships_pos[ships_list[i].id] = null;
@@ -38,17 +41,22 @@ function create_board(id, wl = false){
     for(var j = 1; j <= 10; j ++){
       var td = document.createElement('td');
       td.id = String.fromCharCode(i + 64) + j;
+      if(wl !== 1)
+        td.id += id;
       td.setAttribute('data-coord', String.fromCharCode(i + 64) + j);
-      if(wl){
+      if(wl === 1){
         td.addEventListener('dragenter', dragEnter, false);
         td.addEventListener('dragover', dragOver, false);
         td.addEventListener('dragleave', dragLeave, false);
         td.addEventListener('drop', drop, false);
         td.addEventListener('drop', dragEnd, false);
+        config_board[i][j] = 0;
+      }
+      else if(wl === 2){
+        td.className = 'can-hit';
+        td.addEventListener('click', hit, false);
       }
       tr.appendChild(td);
-      if(wl)
-        config_board[i][j] = 0;
     }
     table.appendChild(tr);
   }
@@ -57,10 +65,8 @@ function create_board(id, wl = false){
 
 function check_config_board(){
   for(var i = 0; i < ships_list.length; i ++)
-    if(ships_pos[ships_list[i].id] === null){
-      alert("missing " + ships_list[i].id);
+    if(ships_pos[ships_list[i].id] === null)
       return false;
-    }
   return true;
 }
 
@@ -160,23 +166,8 @@ function drop(e){
 
   for(var i = 0; i < ships_list.length; i ++){
     if(ship === ships_list[i].id){
-      var imgs = ships_list[i].imgs;
-
-      for(var j = 0; j < ship_size; j ++){
-        var image = new Image();
-        image.src = imgs[j];
-        image.className = ship + "_" + j;
-        image.onmousedown = function(event){
-          event.preventDefault();
-          return false;
-        };
-
-        $('#' + linec + (column + j)).append(image);
-
-        config_board[linec.charCodeAt(0) - 64][column + j] = i + 1;
-      }
-      
       ships_pos[ship] = 'H' + linec + column;
+      place_ship('', config_board, ships_pos[ships_list[i].id], ships_list[i], true);
     }
   }
 
