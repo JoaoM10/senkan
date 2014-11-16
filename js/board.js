@@ -70,6 +70,13 @@ function check_config_board(){
   return true;
 }
 
+function rotateShip(e){
+  if($(this).hasClass('rot90'))
+    $(this).removeClass('rot90');
+  else
+    $(this).addClass('rot90');
+}
+
 function dragStart(e){
   $(this).addClass('used');
   $(this).attr('draggable', 'false');
@@ -81,22 +88,36 @@ function dragStart(e){
   var dragIcon = document.createElement('img');
   e.dataTransfer.effectAllowed = 'move';
   e.dataTransfer.setData('image/png', this.innerHTML);
+  var ifrot = '';
+  if($(this).hasClass('rot90'))
+    ifrot = '_v';
   if($(this).hasClass('ship3_1') || $(this).hasClass('ship3_2'))
-    dragIcon.src = 'media/ships/ship3.png'
+    dragIcon.src = 'media/ships/ship3' + ifrot + '.png';
   else  
-    dragIcon.src = 'media/ships/' + $(this).attr('class').substring(0, 5) + '.png'
+    dragIcon.src = 'media/ships/' + $(this).attr('class').substring(0, 5) + ifrot + '.png';
   e.dataTransfer.setDragImage(dragIcon, 15, 15);
   return true;
 }
 
-function check_ship_place(linec, column, ship_size){
-  if(column + ship_size - 1 <= 10){
-    for(var i = 0; i < ship_size; i ++)
-      if(config_board[linec.charCodeAt(0) - 64][column + i] !== 0)
-        return false;
+function check_ship_place(linec, column, ship_size, orient = 'H'){
+  if(orient === 'H'){
+    if(column + ship_size - 1 <= 10){
+      for(var i = 0; i < ship_size; i ++)
+        if(config_board[linec.charCodeAt(0) - 64][column + i] !== 0)
+          return false;
+    }
+    else
+      return false;
   }
-  else
-    return false;
+  else{
+    if(linec.charCodeAt(0) - 64 + ship_size - 1 <= 10){
+      for(var i = 0; i < ship_size; i ++)
+        if(config_board[linec.charCodeAt(0) - 64 + i][column] !== 0)
+          return false;
+    }
+    else
+      return false;
+  }
   return true;
 }
 
@@ -104,25 +125,35 @@ function dragEnter(e){
   e.preventDefault();
 
   for(var i = 0; i < last_size; i ++)
-    $('#' + last_line + (last_column + i)).removeClass('over');
+    if(last_orientation === 'H')
+      $('#' + last_line + (last_column + i)).removeClass('over');
+    else
+      $('#' + String.fromCharCode(last_line.charCodeAt(0) + i) + last_column).removeClass('over');
 
   var coord = $(this).attr('data-coord');
   var linec = coord.substring(0, 1);
+  var line = linec.charCodeAt(0) - 64;
   var column = parseInt(coord.substring(1));
   var ship = $(dragObject).attr('class').substring(0,5);
   var ship_size = parseInt(ship.substring(4, 5));
   if(ship_size == 3)
     ship = $(dragObject).attr('class').substring(0,7);
-  
-  if(check_ship_place(linec, column, ship_size)){
+  var orient = 'H';
+  if($(dragObject).hasClass('rot90'))
+    orient = 'V';
+
+  if(check_ship_place(linec, column, ship_size, orient)){
     for(var i = 0; i < ship_size; i ++)
-      $('#' + linec + (column + i)).addClass('over');
+      if(orient === 'H')
+        $('#' + linec + (column + i)).addClass('over');
+      else
+        $('#' + String.fromCharCode(line + i + 64) + column).addClass('over');
+
     last_line = linec;
     last_column = column;
     last_size = ship_size;
+    last_orientation = orient;
   }
-  //else
-    //$('#' + linec + (column + i)).addClass('forbidden');
 }
 
 function dragOver(e){
@@ -136,8 +167,11 @@ function dragOver(e){
   var ship_size = parseInt(ship.substring(4, 5));
   if(ship_size == 3)
     ship = $(dragObject).attr('class').substring(0,7);
+  var orient = 'H';
+  if($(dragObject).hasClass('rot90'))
+    orient = 'V';
 
-  if(check_ship_place(linec, column, ship_size))
+  if(check_ship_place(linec, column, ship_size, orient))
     e.dataTransfer.dropEffect = 'move';
   else
     e.dataTransfer.dropEffect = 'none';
@@ -163,11 +197,15 @@ function drop(e){
   var ship_size = parseInt(ship.substring(4, 5));
   if(ship_size == 3)
     ship = $(dragObject).attr('class').substring(0,7);
+  var orient = 'H';
+  if($(dragObject).hasClass('rot90'))
+    orient = 'V';
 
   for(var i = 0; i < ships_list.length; i ++){
     if(ship === ships_list[i].id){
-      ships_pos[ship] = 'H' + linec + column;
+      ships_pos[ship] = orient + linec + column;
       place_ship('', config_board, ships_pos[ships_list[i].id], ships_list[i], true);
+      $(dragObject).removeClass('rot90');
     }
   }
 
@@ -188,9 +226,13 @@ function dragEnd(e){
   e.preventDefault();
   
   for(var i = 0; i < last_size; i ++)
-    $('#' + last_line + (last_column + i)).removeClass('over');
+    if(last_orientation === 'H')
+      $('#' + last_line + (last_column + i)).removeClass('over');
+    else
+      $('#' + String.fromCharCode(last_line.charCodeAt(0) + i) + last_column).removeClass('over');
 }
 
 function random_config_board(){
+
   ships_pos = generate_ship_positions();
 }
