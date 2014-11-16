@@ -40,6 +40,11 @@
     this.isSet = function(modeName){
       return gameMode === modeName;
     };
+
+    this.randomConfig = function(){
+      random_config_board();
+      this.setMode(4);
+    };
   });
 
 

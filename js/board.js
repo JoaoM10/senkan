@@ -190,3 +190,7 @@ function dragEnd(e){
   for(var i = 0; i < last_size; i ++)
     $('#' + last_line + (last_column + i)).removeClass('over');
 }
+
+function random_config_board(){
+  ships_pos = generate_ship_positions();
+}
