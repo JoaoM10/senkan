@@ -15,6 +15,23 @@
     };
   });
 
+  app.controller('HallOfFameController', function(){
+    this.hall_of_fame = [
+      {pos: 1, username: 'Joao', score: 83},
+      {pos: 2, username: 'Filipe', score: 82},
+      {pos: 3, username: 'Antonio', score: 81},
+      {pos: 4, username: 'Joaquim', score: 80},
+      {pos: 5, username: 'Miguel', score: 79},
+      {pos: 6, username: 'Pedro', score: 78},
+      {pos: 7, username: 'Rita', score: 77},
+      {pos: 8, username: 'Maria', score: 76},
+      {pos: 9, username: 'Andre', score: 75},
+      {pos: 10, username: 'Ze', score: 74}
+    ];
+
+    //****
+  });
+
   app.controller('GameController', function(){
 
     this.setMode = function(newValue){
