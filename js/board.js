@@ -71,10 +71,16 @@ function check_config_board(){
 }
 
 function rotateShip(e){
-  if($(this).hasClass('rot90'))
+  if($(this).hasClass('rot90')){
     $(this).removeClass('rot90');
-  else
+    $(this).removeClass('mt70');
+    $(this).removeClass('mb70');
+  }
+  else{
     $(this).addClass('rot90');
+    $(this).addClass('mt70');
+    $(this).addClass('mb70');
+  }
 }
 
 function dragStart(e){
@@ -206,6 +212,8 @@ function drop(e){
       ships_pos[ship] = orient + linec + column;
       place_ship('', config_board, ships_pos[ships_list[i].id], ships_list[i], true);
       $(dragObject).removeClass('rot90');
+      $(dragObject).removeClass('mt70');
+      $(dragObject).removeClass('mb70');
     }
   }
 
