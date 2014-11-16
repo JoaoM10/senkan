@@ -8,6 +8,7 @@ var ancel_ships_state;
 var player_left;
 var ancel_left;
 var score;
+var targets;
 
 function getRandomInt(min, max){
 
@@ -138,6 +139,7 @@ function init_game_ancel(){
 		}
 	}
 
+	targets = [];
 	score = 100;
 	ancel_pos = generate_ship_positions();
 	turn = 'Player';
@@ -216,6 +218,16 @@ function shot(pl, coord){
 				player_left -= 1;
 				return player_board[line][column];
 			}
+
+			if(line < 10 && ancel_shots[line + 1][column] === 0)
+				targets.push(String.fromCharCode(line + 1 + 64) + column);
+			if(line > 1 && ancel_shots[line - 1][column] === 0)
+				targets.push(String.fromCharCode(line - 1 + 64) + column);
+			if(column < 10 && ancel_shots[line][column + 1] === 0)
+				targets.push(String.fromCharCode(line + 64) + (column + 1));
+			if(column > 1 && ancel_shots[line][column - 1] === 0)
+				targets.push(String.fromCharCode(line + 64) + (column - 1));
+
 		}
 		else{
         	var image = new Image();
@@ -242,9 +254,72 @@ function ancel_bot_random(){
 	return co;
 }
 
+function ancel_bot_ai(){
+	var line, column, co;
+
+	if(targets.length === 0){
+
+		var pr = new Array(11);
+		for(var i = 1; i <= 10; i ++){
+			pr[i] = new Array(11);
+			for(var j = 1; j <= 10; j ++)
+				pr[i][j] = 0;
+		}
+
+		for(var i = 0; i < ships_list.length; i ++){
+			if(player_ships_state[ships_list[i].id] > 0){
+				var ship_size = parseInt(ships_list[i].id[4]);
+
+	    		for(var l = 1; l <= 10; l ++)
+	    			for(var c = 1; c <= 10; c ++)
+	    				if(c + ship_size - 1 <= 10){
+	    					var tk = true;
+	    					for(var j = 0; j < ship_size; j ++)
+	    						if(ancel_shots[l][c + j] !== 0)
+	    							tk = false;
+	    					if(tk){
+	    						for(var j = 0; j < ship_size; j ++)
+	    							pr[l][c + j] += 1;
+	    					}
+	    				}
+	    		for(var l = 1; l <= 10; l ++)
+	    			if(l + ship_size - 1 <= 10)
+	    				for(var c = 1; c <= 10; c ++){
+	    					var tk = true;
+	    					for(var j = 0; j < ship_size; j ++)
+	    						if(ancel_shots[l + j][c] !== 0)
+	    							tk = false;
+	    					if(tk){
+	    						for(var j = 0; j < ship_size; j ++)
+	    							pr[l + j][c] += 1;
+	    					}
+	    				}
+
+			}
+		}
+
+		line = column = -1;
+		var best = -1;
+		for(var i = 1; i <= 10; i ++)
+			for(var j = 1; j <= 10; j ++)
+				if(pr[i][j] > best){
+					line = i;
+					column = j;
+					best = pr[i][j];
+				}
+
+		co = String.fromCharCode(line + 64) + column;
+	}
+	else{
+		co = targets.pop();
+	}
+
+	return co;
+}
+
 function ancel_bot(){
-	return ancel_bot_random();
-	//return ancel_bot_ai();
+	//return ancel_bot_random();
+	return ancel_bot_ai();
 }
 
 function hit(e){
@@ -271,11 +346,17 @@ function hit(e){
 				alert("You destroyed Ancel's " + ships_list[i].name);
 	}
 
-	var r = shot('Ancel', ancel_bot());
+	var cbot = ancel_bot();
+	var r = shot('Ancel', cbot);
 	turn = 'You';
 	$("#turn").html("You"); 
 	if(player_left === 0){
 		$('#show-lose').click();
 		return;
+	}
+	if(r !== ''){
+		for(var i = 0; i < ships_list.length; i ++)
+			if(r === ships_list[i].id)
+				alert("Ancel destroyed your " + ships_list[i].name);
 	}
 }
