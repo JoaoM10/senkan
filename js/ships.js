@@ -48,8 +48,10 @@ function create_ships(){
     image.src = ships_list[i].url;
     image.className = ship.id;
     image.setAttribute('draggable', 'true');
+
     image.addEventListener('dragstart', dragStart, false);
     image.addEventListener('dblclick', rotateShip, false);
+    
     div.appendChild(image);
     ship_out.push(div);
   }

@@ -9,7 +9,7 @@ var last_orientation = 'H';
 var config_board;
 var ships_pos;
 
-function create_board(id, wl = 0){
+function create_board(id, wl){
   var table = document.createElement('table');
   table.id = id;
   table.className = 'game-board'
@@ -99,7 +99,7 @@ function dragStart(e){
   return true;
 }
 
-function check_ship_place(linec, column, ship_size, orient = 'H'){
+function check_ship_place(linec, column, ship_size, orient){
   if(orient === 'H'){
     if(column + ship_size - 1 <= 10){
       for(var i = 0; i < ship_size; i ++)
