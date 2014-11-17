@@ -169,16 +169,16 @@ function place_ship(bid, bboard, pos, ship, vis){
 }
 
 function init_game_ancel(){
-	player_board = new Array(11);
-	ancel_board = new Array(11);
-	player_shots = new Array(11);
-	ancel_shots = new Array(11);
-	for(var i = 1; i <= 10; i++){
-		player_board[i] = new Array(11);
-		ancel_board[i] = new Array(11);
-		player_shots[i] = new Array(11);
-		ancel_shots[i] = new Array(11);
-		for(var j = 1; j <= 10; j ++){
+	player_board = new Array(12);
+	ancel_board = new Array(12);
+	player_shots = new Array(12);
+	ancel_shots = new Array(12);
+	for(var i = 0; i <= 11; i++){
+		player_board[i] = new Array(12);
+		ancel_board[i] = new Array(12);
+		player_shots[i] = new Array(12);
+		ancel_shots[i] = new Array(12);
+		for(var j = 0; j <= 11; j ++){
 			player_board[i][j] = 0;
 			ancel_board[i][j] = 0;
 			player_shots[i][j] = 0;
@@ -350,7 +350,7 @@ function ancel_bot_ai(){
 	    				if(c + ship_size - 1 <= 10){
 	    					var tk = true;
 	    					for(var j = 0; j < ship_size; j ++)
-	    						if(ancel_shots[l][c + j] !== 0)
+	    						if(ancel_shots[l][c + j] !== 0 || ancel_shots[l - 1][c + j] !== 0 || ancel_shots[l][c + j - 1] !== 0 || ancel_shots[l + 1][c + j] !== 0 || ancel_shots[l][c + j + 1] !== 0)
 	    							tk = false;
 	    					if(tk){
 	    						for(var j = 0; j < ship_size; j ++)
