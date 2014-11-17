@@ -378,14 +378,15 @@ function ancel_bot_ai(){
 		var best = -1;
 		for(var i = 1; i <= 10; i ++)
 			for(var j = 1; j <= 10; j ++)
-				if(pr[i][j] > best){
-					tt = [];
-					tt.push([i, j]);
-					best = pr[i][j];
+				if((i + j) % 2 === 0){
+					if(pr[i][j] > best){
+						tt = [];
+						tt.push([i, j]);
+						best = pr[i][j];
+					}
+					else if(pr[i][j] === best)
+						tt.push([i, j]);
 				}
-				else if(pr[i][j] === best)
-					tt.push([i, j]);
-
 		var rr = getRandomInt(0, tt.length - 1);
 		line = tt[rr][0];
 		column = tt[rr][1];
