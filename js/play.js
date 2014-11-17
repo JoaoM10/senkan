@@ -197,7 +197,7 @@ function init_game_ancel(){
 	score = 100;
 	ancel_pos = generate_ship_positions();
 	turn = 'Player';
-	$('#turn').html('Player');
+	$('#turn').html('You');
 	$('#score').html('100');
 	$('#game-progress').attr('aria-valuenow', '0');
 	$('#game-progress').css('width', '0%');
@@ -393,15 +393,14 @@ function ancel_bot_ai(){
 	else if(striking_mode === 1){
 		// need to figure out direction
 		var r = getRandomInt(0, 3);
-		while(ancel_shots[last_ancel_line + dirs[r][0]][last_ancel_column + dirs[r][1]] === 1){
+		while(ancel_shots[last_ancel_line + dirs[r][0]][last_ancel_column + dirs[r][1]] !== 0 || (last_ancel_line + dirs[r][0]) < 1 || (last_ancel_line + dirs[r][0]) > 10 || (last_ancel_column + dirs[r][1]) < 1 || (last_ancel_column + dirs[r][1]) > 10)
 			r = getRandomInt(0, 3);
-		}
 		line = last_ancel_line + dirs[r][0];	
 		column = last_ancel_column + dirs[r][1];
 	}
 	else{ // striking_mode = 2
 		// continue striking may need to invert direction
-		if(last_ancel_shot === 0 || (last_ancel_line + dirs[last_ancel_orient][0]) < 1 || (last_ancel_line + dirs[last_ancel_orient][0]) > 10 || (last_ancel_column + dirs[last_ancel_orient][1]) < 1 || (last_ancel_column + dirs[last_ancel_orient][1]) > 10){
+		if(ancel_shots[last_ancel_line + dirs[last_ancel_orient][0]][last_ancel_column + dirs[last_ancel_orient][1]] !== 0 || last_ancel_shot === 0 || (last_ancel_line + dirs[last_ancel_orient][0]) < 1 || (last_ancel_line + dirs[last_ancel_orient][0]) > 10 || (last_ancel_column + dirs[last_ancel_orient][1]) < 1 || (last_ancel_column + dirs[last_ancel_orient][1]) > 10){
 			// invert dir
 			last_ancel_line = first_ancel_line;
 			last_ancel_column = first_ancel_column;
@@ -411,7 +410,7 @@ function ancel_bot_ai(){
 		line = last_ancel_line + dirs[last_ancel_orient][0];
 		column = last_ancel_column + dirs[last_ancel_orient][1];
 	}
-	
+
 	co = String.fromCharCode(line + 64) + column;
 	return co;
 }
@@ -428,7 +427,7 @@ function hit(e){
   	var line = coord.charCodeAt(0) - 64;
 	var column = parseInt(coord.substring(1));
 
-	if(turn !== 'Player' && player_shots[line][column] !== 0)
+	if(turn !== 'Player' || player_shots[line][column] !== 0)
 		return;
 
 	var r = shot('Player', coord);
@@ -447,7 +446,7 @@ function hit(e){
 
 	var cbot = ancel_bot();
 	var r = shot('Ancel', cbot);
-	turn = 'You';
+	turn = 'Player';
 	$("#turn").html("You"); 
 	if(player_left === 0){
 		$('#show-lose').click();
