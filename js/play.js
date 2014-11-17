@@ -10,6 +10,15 @@ var ancel_left;
 var score;
 var targets;
 
+var dirs = [[0, +1], [+1, 0], [0, -1], [-1, 0]];
+var striking_mode;
+var first_ancel_line;
+var first_ancel_column;
+var last_ancel_shot;
+var last_ancel_line;
+var last_ancel_column;
+var last_ancel_orient;
+
 function getRandomInt(min, max){
 
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -18,10 +27,10 @@ function getRandomInt(min, max){
 function generate_ship_positions(){
 	
 	var tmp_pos = new Array();
-	var ck = new Array(11);
-	for(var i = 1; i <= 10; i ++){
-		ck[i] = new Array(11);
-		for(var j = 1; j <= 10; j ++)
+	var ck = new Array(12);
+	for(var i = 0; i <= 11; i ++){
+		ck[i] = new Array(12);
+		for(var j = 0; j <= 11; j ++)
 			ck[i][j] = 0;
 	}
 	
@@ -63,12 +72,26 @@ function generate_ship_positions(){
     	var line = parseInt(pp[r][1].charCodeAt(0) - 64);
     	var column = parseInt(pp[r].substring(2));
     	if(orient === 0){
-    		for(var j = 0; j < ship_size; j ++)
+    		for(var j = 0; j < ship_size; j ++){
     			ck[line][column + j] = 1;
+
+    			// dont allow adjacent ships
+    			ck[line - 1][column + j] = 1;
+    			ck[line + 1][column + j] = 1;
+    		}
+    		ck[line][column - 1] = 1;
+    		ck[line][column + ship_size] = 1;
 		}
 		else{
-    		for(var j = 0; j < ship_size; j ++)
-    			ck[line + j][column ] = 1;
+    		for(var j = 0; j < ship_size; j ++){
+    			ck[line + j][column] = 1;
+
+     			// dont allow adjacent ships
+    			ck[line + j][column - 1] = 1;
+    			ck[line + j][column + 1] = 1;
+    		}
+    		ck[line - 1][column] = 1;
+    		ck[line + ship_size][column] = 1;
 		}
     }
 	
@@ -86,10 +109,35 @@ function place_ship(bid, bboard, pos, ship, vis){
 	if(orient === 'H'){
 		for(var i = 0; i < ship_size; i ++)
 			bboard[line][column + i] = ship.id;
+
+		// Dont allow adjacent ships
+		if(line > 1)
+			for(var i = 0; i < ship_size; i ++)
+				bboard[line - 1][column + i] = -1;
+		if(line < 10)
+			for(var i = 0; i < ship_size; i ++)
+				bboard[line + 1][column + i] = -1;
+		if(column > 1)
+			bboard[line][column - 1] = -1;
+		if(column + ship_size - 1 < 10)
+			bboard[line][column + ship_size] = -1;
 	}
 	else{
 		for(var i = 0; i < ship_size; i ++)
 			bboard[line + i][column] = ship.id;
+
+		// Dont allow adjacent ships
+		if(column > 1)
+			for(var i = 0; i < ship_size; i ++)
+				bboard[line + i][column - 1] = -1;
+		if(column < 10)
+			for(var i = 0; i < ship_size; i ++)
+				bboard[line + i][column + 1] = -1;
+
+		if(line > 1)
+			bboard[line - 1][column] = -1;
+		if(line + ship_size - 1 < 10)
+			bboard[line + ship_size][column] = -1;
 	}
 	
 	if(vis){
@@ -138,7 +186,14 @@ function init_game_ancel(){
 		}
 	}
 
-	targets = [];
+	striking_mode = 0;
+	last_ancel_shot = 0;
+	last_ancel_line = 0;
+	last_ancel_column = 0;
+	last_ancel_orient = 0;
+	first_ancel_line = 0;
+	first_ancel_column = 0;
+
 	score = 100;
 	ancel_pos = generate_ship_positions();
 	turn = 'Player';
@@ -169,7 +224,7 @@ function shot(pl, coord){
 		
 		player_shots[line][column] = 1;
 
-		if(ancel_board[line][column] !== 0){
+		if(ancel_board[line][column] !== 0 && ancel_board[line][column] !== -1){
 			var hts = parseInt($("#game-progress").attr('aria-valuenow'));
 			hts += 1;
 			$("#game-progress").attr('aria-valuenow', hts);
@@ -203,7 +258,7 @@ function shot(pl, coord){
 	else{
 		ancel_shots[line][column] = 1;
 
-		if(player_board[line][column] !== 0){
+		if(player_board[line][column] !== 0 && player_board[line][column] !== -1){
         	var image = new Image();
         	image.src = 'media/hit.png';
         	image.className = 'hit';
@@ -215,18 +270,13 @@ function shot(pl, coord){
 			player_ships_state[player_board[line][column]] -= 1;
 			if(player_ships_state[player_board[line][column]] === 0){
 				player_left -= 1;
+				last_ancel_shot = 2;
 				return player_board[line][column];
 			}
 
-			if(line < 10 && ancel_shots[line + 1][column] === 0)
-				targets.push(String.fromCharCode(line + 1 + 64) + column);
-			if(line > 1 && ancel_shots[line - 1][column] === 0)
-				targets.push(String.fromCharCode(line - 1 + 64) + column);
-			if(column < 10 && ancel_shots[line][column + 1] === 0)
-				targets.push(String.fromCharCode(line + 64) + (column + 1));
-			if(column > 1 && ancel_shots[line][column - 1] === 0)
-				targets.push(String.fromCharCode(line + 64) + (column - 1));
-
+			last_ancel_shot = 1;
+			last_ancel_line = line;
+			last_ancel_column = column;
 		}
 		else{
         	var image = new Image();
@@ -237,6 +287,8 @@ function shot(pl, coord){
 				return false;
 			};
 			$('#' + String.fromCharCode(line + 64) + column + 'player-board').html(image);
+
+			last_ancel_shot = 0;
 		}
 	}
 
@@ -256,7 +308,31 @@ function ancel_bot_random(){
 function ancel_bot_ai(){
 	var line, column, co;
 
-	if(targets.length === 0){
+	if(striking_mode === 1 && last_ancel_shot === 1){
+		striking_mode = 2;
+		// determine direction
+		if(first_ancel_line === last_ancel_line && first_ancel_column + 1 === last_ancel_column)
+			last_ancel_orient = 0;
+		else if(first_ancel_line + 1 === last_ancel_line && first_ancel_column === last_ancel_column)
+			last_ancel_orient = 1;
+		else if(first_ancel_line === last_ancel_line && first_ancel_column - 1 === last_ancel_column)
+			last_ancel_orient = 2;
+		else //if(first_ancel_line - 1 === last_ancel_line && first_ancel_column === last_ancel_column)
+			last_ancel_orient = 3;
+	}
+	if(striking_mode === 0 && last_ancel_shot === 1){
+		striking_mode = 1;
+		first_ancel_line = last_ancel_line;
+		first_ancel_column = last_ancel_column;
+	}
+	if(last_ancel_shot === 2){
+		striking_mode = 0;
+		last_ancel_line = 0;
+		last_ancel_column = 0;
+		last_ancel_orient = 0;
+	}
+
+	if(striking_mode === 0){
 
 		var pr = new Array(11);
 		for(var i = 1; i <= 10; i ++){
@@ -297,22 +373,45 @@ function ancel_bot_ai(){
 			}
 		}
 
-		line = column = -1;
+		var tt = [];
 		var best = -1;
 		for(var i = 1; i <= 10; i ++)
 			for(var j = 1; j <= 10; j ++)
 				if(pr[i][j] > best){
-					line = i;
-					column = j;
+					tt = [];
+					tt.push([i, j]);
 					best = pr[i][j];
 				}
+				else if(pr[i][j] === best)
+					tt.push([i, j]);
 
-		co = String.fromCharCode(line + 64) + column;
+		var rr = getRandomInt(0, tt.length - 1);
+		line = tt[rr][0];
+		column = tt[rr][1];
 	}
-	else{
-		co = targets.pop();
+	else if(striking_mode === 1){
+		// need to figure out direction
+		var r = getRandomInt(0, 3);
+		while(ancel_shots[last_ancel_line + dirs[r][0]][last_ancel_column + dirs[r][1]] === 1){
+			r = getRandomInt(0, 3);
+		}
+		line = last_ancel_line + dirs[r][0];	
+		column = last_ancel_column + dirs[r][1];
 	}
-
+	else{ // striking_mode = 2
+		// continue striking may need to invert direction
+		if(last_ancel_shot === 0 || (last_ancel_line + dirs[last_ancel_orient][0]) < 1 || (last_ancel_line + dirs[last_ancel_orient][0]) > 10 || (last_ancel_column + dirs[last_ancel_orient][1]) < 1 || (last_ancel_column + dirs[last_ancel_orient][1]) > 10){
+			// invert dir
+			last_ancel_line = first_ancel_line;
+			last_ancel_column = first_ancel_column;
+			last_ancel_orient = (last_ancel_orient + 2) % 4;
+		}
+		
+		line = last_ancel_line + dirs[last_ancel_orient][0];
+		column = last_ancel_column + dirs[last_ancel_orient][1];
+	}
+	
+	co = String.fromCharCode(line + 64) + column;
 	return co;
 }
 
