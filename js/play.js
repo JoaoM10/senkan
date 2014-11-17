@@ -256,7 +256,6 @@ function shot(pl, coord){
 		}
 	}
 	else{
-		ancel_shots[line][column] = 1;
 
 		if(player_board[line][column] !== 0 && player_board[line][column] !== -1){
         	var image = new Image();
@@ -274,6 +273,7 @@ function shot(pl, coord){
 				return player_board[line][column];
 			}
 
+			ancel_shots[line][column] = 2;
 			last_ancel_shot = 1;
 			last_ancel_line = line;
 			last_ancel_column = column;
@@ -288,6 +288,7 @@ function shot(pl, coord){
 			};
 			$('#' + String.fromCharCode(line + 64) + column + 'player-board').html(image);
 
+			ancel_shots[line][column] = 1;
 			last_ancel_shot = 0;
 		}
 	}
@@ -350,7 +351,7 @@ function ancel_bot_ai(){
 	    				if(c + ship_size - 1 <= 10){
 	    					var tk = true;
 	    					for(var j = 0; j < ship_size; j ++)
-	    						if(ancel_shots[l][c + j] !== 0 || ancel_shots[l - 1][c + j] !== 0 || ancel_shots[l][c + j - 1] !== 0 || ancel_shots[l + 1][c + j] !== 0 || ancel_shots[l][c + j + 1] !== 0)
+	    						if(ancel_shots[l][c + j] !== 0 || ancel_shots[l - 1][c + j] === 2 || ancel_shots[l][c + j - 1] === 2 || ancel_shots[l + 1][c + j] === 2 || ancel_shots[l][c + j + 1] === 2)
 	    							tk = false;
 	    					if(tk){
 	    						for(var j = 0; j < ship_size; j ++)
@@ -362,7 +363,7 @@ function ancel_bot_ai(){
 	    				for(var c = 1; c <= 10; c ++){
 	    					var tk = true;
 	    					for(var j = 0; j < ship_size; j ++)
-	    						if(ancel_shots[l + j][c] !== 0)
+	    						if(ancel_shots[l + j][c] !== 0 || ancel_shots[l + j - 1][c] === 2 || ancel_shots[l + j + 1][c] === 2 || ancel_shots[l + j][c - 1] === 2 || ancel_shots[l + j][c + 1] === 2)
 	    							tk = false;
 	    					if(tk){
 	    						for(var j = 0; j < ship_size; j ++)
