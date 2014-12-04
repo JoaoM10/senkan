@@ -18,6 +18,7 @@ var last_ancel_shot;
 var last_ancel_line;
 var last_ancel_column;
 var last_ancel_orient;
+var rand_parity;
 
 function getRandomInt(min, max){
 
@@ -193,6 +194,7 @@ function init_game_ancel(){
 	last_ancel_orient = 0;
 	first_ancel_line = 0;
 	first_ancel_column = 0;
+	rand_parity = getRandomInt(0, 1);
 
 	score = 100;
 	ancel_pos = generate_ship_positions();
@@ -267,13 +269,13 @@ function shot(pl, coord){
 			};
 			$('#' + String.fromCharCode(line + 64) + column + 'player-board').html(image);
 			player_ships_state[player_board[line][column]] -= 1;
+			ancel_shots[line][column] = 2;
 			if(player_ships_state[player_board[line][column]] === 0){
 				player_left -= 1;
 				last_ancel_shot = 2;
 				return player_board[line][column];
 			}
 
-			ancel_shots[line][column] = 2;
 			last_ancel_shot = 1;
 			last_ancel_line = line;
 			last_ancel_column = column;
@@ -304,6 +306,19 @@ function ancel_bot_random(){
 	}while(ancel_shots[line][column] !== 0);
 	var co = String.fromCharCode(line + 64) + column;
 	return co;
+}
+
+function ancel_bot_ai_test_pos(ll, cc, dd){
+	if(ancel_shots[ll][cc] !== 0)
+		return false;
+	if(ll < 1 || ll > 10)
+		return false;
+	if(cc < 1 || cc > 10)
+		return false;
+	for(var i = 0; i < 4; i ++)
+		if(ancel_shots[ll + dirs[i][0]][cc + dirs[i][1]] === 2 && i !== ((dd + 2) % 4))
+			return false;
+	return true;
 }
 
 function ancel_bot_ai(){
@@ -378,7 +393,7 @@ function ancel_bot_ai(){
 		var best = -1;
 		for(var i = 1; i <= 10; i ++)
 			for(var j = 1; j <= 10; j ++)
-				if((i + j) % 2 === 0){
+				if((i + j) % 2 === rand_parity){
 					if(pr[i][j] > best){
 						tt = [];
 						tt.push([i, j]);
@@ -397,12 +412,7 @@ function ancel_bot_ai(){
 		for(var i = 0; i < 4; i ++){
 			var cur_line = last_ancel_line;
 			var cur_col = last_ancel_column;
-			while(ancel_shots[cur_line + dirs[i][0]][cur_col + dirs[i][1]] === 0 && (cur_line + dirs[i][0]) >= 1 &&
-					(cur_line + dirs[i][0]) <= 10 && (cur_col + dirs[i][1]) >= 1 && (cur_col + dirs[i][1]) <= 10 &&
-						(ancel_shots[cur_line + dirs[i][0] + 1][cur_col + dirs[i][1]] !== 2 || i === 3) && 
-						(ancel_shots[cur_line + dirs[i][0] - 1][cur_col + dirs[i][1]] !== 2 || i === 1) &&
-						(ancel_shots[cur_line + dirs[i][0]][cur_col + dirs[i][1] + 1] !== 2 || i === 2) &&
-						(ancel_shots[cur_line + dirs[i][0]][cur_col + dirs[i][1] - 1] !== 2 || i === 0)){
+			while(ancel_bot_ai_test_pos(cur_line + dirs[i][0], cur_col + dirs[i][1], i)){
 				cur_line += dirs[i][0];
 				cur_col += dirs[i][1];
 				dc[i] ++;
@@ -413,41 +423,31 @@ function ancel_bot_ai(){
 		var d_left = dc[2];
 		var d_up = dc[3];
 
-		if(d_up + d_down == d_left + d_right){
-			var dd = getRandomInt(0, 1);
-			if(dd == 0)
-				d_left --;
-			else
-				d_down --;
-		}
+		var dd = getRandomInt(0, 1);
 
-		if(d_up + d_down > d_left + d_down){
-			if(d_up == d_down){
-				var dd = getRandomInt(0, 1);
-				if(dd == 0)
-					d_up --;
-				else
-					d_down --;
-			}
-			if(d_up > d_down && d_down > 0)
+		if(d_up + d_down > d_left + d_right || (d_up + d_down === d_left + d_right && dd === 0)){
+			dd = getRandomInt(0, 1);
+			if(d_up === 0)
+				dd = 0;
+			if(d_down === 0)
+				dd = 1;
+			column = last_ancel_column;
+			if(dd === 0)
 				line = last_ancel_line + 1;	
 			else
 				line = last_ancel_line - 1;	
-			column = last_ancel_column;
 		}
 		else{
-			if(d_left == d_right){
-				var dd = getRandomInt(0, 1);
-				if(dd == 0)
-					d_left --;
-				else
-					d_right --;
-			}
-			if(d_left > d_right && d_right > 0)
+			dd = getRandomInt(0, 1);
+			if(d_left === 0)
+				dd = 0;
+			if(d_right === 0)
+				dd = 1;
+			line = last_ancel_line;
+			if(dd === 0)
 				column = last_ancel_column + 1;	
 			else
 				column = last_ancel_column - 1;	
-			line = last_ancel_line;
 		}
 
 	}
@@ -519,7 +519,7 @@ function hit(e){
     			div.setAttribute('role', 'alert');
     			div.appendChild(document.createTextNode('Ancel destroyed your ' + ships_list[i].name + '!'));
 				$('#game-feed').prepend(div);
-				$('#feed-ancel-' + i).delay(5000).fadeOut('slow');
+				$('#feed-ancel-' + i).delay(1500).fadeOut('slow');
 			}
 	}
 
