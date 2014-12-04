@@ -433,14 +433,14 @@ function hit(e){
 	if(turn !== 'Player' || player_shots[line][column] !== 0)
 		return;
 
+	var player_win = false;
+	var ancel_win = false;
+
 	var r = shot('Player', coord);
 	turn = 'Ancel';
 	$("#turn").html("Ancel");
-	if(ancel_left === 0){
-		$('#final-score').html(score);
-		$('#show-win').click();
-		return;
-	}
+	if(ancel_left === 0)
+		player_win = true;
 	if(r !== ''){
 		for(var i = 0; i < ships_list.length; i ++)
 			if(r === ships_list[i].id)
@@ -451,13 +451,29 @@ function hit(e){
 	var r = shot('Ancel', cbot);
 	turn = 'Player';
 	$("#turn").html("You"); 
-	if(player_left === 0){
-		$('#show-lose').click();
-		return;
-	}
+	if(player_left === 0)
+		ancel_win = true;
 	if(r !== ''){
 		for(var i = 0; i < ships_list.length; i ++)
 			if(r === ships_list[i].id)
 				alert("Ancel destroyed your " + ships_list[i].name);
+	}
+
+	if(player_win && ancel_win){
+		$('.final-score').html(score);
+		$('#show-draw').click();
+		return;
+	}
+
+	if(player_win){
+		$('.final-score').html(score);
+		$('#show-win').click();
+		return;
+	}
+
+	if(ancel_win){
+		$('.final-score').html(score);
+		$('#show-lose').click();
+		return;
 	}
 }
