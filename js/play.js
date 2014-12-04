@@ -156,8 +156,8 @@ function place_ship(bid, bboard, pos, ship, vis){
 		else{
 			for(var i = 0; i < ship_size; i ++){
         		var image = new Image();
-        		image.src = ship.imgs[i];
-        		image.className = ship.id + "_" + i + ' rot90';
+        		image.src = ship.imgs[ship_size - 1 - i];
+        		image.className = ship.id + "_" + (ship_size - 1 - i) + ' rot90';
         		image.onmousedown = function(event){
 					event.preventDefault();
 					return false;
@@ -398,6 +398,8 @@ function ancel_bot_ai(){
 			r = getRandomInt(0, 3);
 		line = last_ancel_line + dirs[r][0];	
 		column = last_ancel_column + dirs[r][1];
+
+		// to improve
 	}
 	else{ // striking_mode = 2
 		// continue striking may need to invert direction
