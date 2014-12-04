@@ -392,14 +392,64 @@ function ancel_bot_ai(){
 		column = tt[rr][1];
 	}
 	else if(striking_mode === 1){
-		// need to figure out direction
-		var r = getRandomInt(0, 3);
-		while(ancel_shots[last_ancel_line + dirs[r][0]][last_ancel_column + dirs[r][1]] !== 0 || (last_ancel_line + dirs[r][0]) < 1 || (last_ancel_line + dirs[r][0]) > 10 || (last_ancel_column + dirs[r][1]) < 1 || (last_ancel_column + dirs[r][1]) > 10)
-			r = getRandomInt(0, 3);
-		line = last_ancel_line + dirs[r][0];	
-		column = last_ancel_column + dirs[r][1];
 
-		// to improve
+		var dc = [0,0,0,0];
+		for(var i = 0; i < 4; i ++){
+			var cur_line = last_ancel_line;
+			var cur_col = last_ancel_column;
+			while(ancel_shots[cur_line + dirs[i][0]][cur_col + dirs[i][1]] === 0 && (cur_line + dirs[i][0]) >= 1 &&
+					(cur_line + dirs[i][0]) <= 10 && (cur_col + dirs[i][1]) >= 1 && (cur_col + dirs[i][1]) <= 10 &&
+						(ancel_shots[cur_line + dirs[i][0] + 1][cur_col + dirs[i][1]] !== 2 || i === 3) && 
+						(ancel_shots[cur_line + dirs[i][0] - 1][cur_col + dirs[i][1]] !== 2 || i === 1) &&
+						(ancel_shots[cur_line + dirs[i][0]][cur_col + dirs[i][1] + 1] !== 2 || i === 2) &&
+						(ancel_shots[cur_line + dirs[i][0]][cur_col + dirs[i][1] - 1] !== 2 || i === 0)){
+				cur_line += dirs[i][0];
+				cur_col += dirs[i][1];
+				dc[i] ++;
+			}
+		}
+		var d_right = dc[0];
+		var d_down = dc[1];
+		var d_left = dc[2];
+		var d_up = dc[3];
+
+		if(d_up + d_down == d_left + d_right){
+			var dd = getRandomInt(0, 1);
+			if(dd == 0)
+				d_left --;
+			else
+				d_down --;
+		}
+
+		if(d_up + d_down > d_left + d_down){
+			if(d_up == d_down){
+				var dd = getRandomInt(0, 1);
+				if(dd == 0)
+					d_up --;
+				else
+					d_down --;
+			}
+			if(d_up > d_down && d_down > 0)
+				line = last_ancel_line + 1;	
+			else
+				line = last_ancel_line - 1;	
+			column = last_ancel_column;
+		}
+		else{
+			if(d_left == d_right){
+				var dd = getRandomInt(0, 1);
+				if(dd == 0)
+					d_left --;
+				else
+					d_right --;
+			}
+			if(d_left > d_right && d_right > 0)
+				column = last_ancel_column + 1;	
+			else
+				column = last_ancel_column - 1;	
+			line = last_ancel_line;
+		}
+
 	}
 	else{ // striking_mode = 2
 		// continue striking may need to invert direction
