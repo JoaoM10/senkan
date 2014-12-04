@@ -43,6 +43,7 @@
         else{
           $('#player-bspace').html(create_board('player-board', 0));
           $('#ancel-bspace').html(create_board('ancel-board', 2));
+          $('#game-feed').html('');
           init_game_ancel();
         }
       }

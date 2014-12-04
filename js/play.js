@@ -436,15 +436,22 @@ function hit(e){
 	var player_win = false;
 	var ancel_win = false;
 
-	var r = shot('Player', coord);
 	turn = 'Ancel';
 	$("#turn").html("Ancel");
+	var r = shot('Player', coord);
 	if(ancel_left === 0)
 		player_win = true;
 	if(r !== ''){
 		for(var i = 0; i < ships_list.length; i ++)
-			if(r === ships_list[i].id)
-				alert("You destroyed Ancel's " + ships_list[i].name);
+			if(r === ships_list[i].id){
+				var div = document.createElement('div');
+    			div.id = "feed-player-" + i;
+    			div.className = 'alert alert-success';
+    			div.setAttribute('role', 'alert');
+    			div.appendChild(document.createTextNode('You destroyed Ancel\'s ' + ships_list[i].name + '!'));
+				$('#game-feed').prepend(div);
+				$('#feed-player-' + i).delay(5000).fadeOut('slow');
+			}
 	}
 
 	var cbot = ancel_bot();
@@ -455,8 +462,15 @@ function hit(e){
 		ancel_win = true;
 	if(r !== ''){
 		for(var i = 0; i < ships_list.length; i ++)
-			if(r === ships_list[i].id)
-				alert("Ancel destroyed your " + ships_list[i].name);
+			if(r === ships_list[i].id){
+				var div = document.createElement('div');
+				div.id = "feed-ancel-" + i;
+    			div.className = 'alert alert-danger';
+    			div.setAttribute('role', 'alert');
+    			div.appendChild(document.createTextNode('Ancel destroyed your ' + ships_list[i].name + '!'));
+				$('#game-feed').prepend(div);
+				$('#feed-ancel-' + i).delay(5000).fadeOut('slow');
+			}
 	}
 
 	if(player_win && ancel_win){
