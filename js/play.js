@@ -219,6 +219,9 @@ function init_game_ancel(){
 function explosion(ll, cc, bid){
 	$('#' + String.fromCharCode(ll + 64) + cc + bid).removeClass('can-hit');
 
+	var snd = new Audio("media/explosion.wav");
+	snd.play();
+
 	var canvas = document.createElement('canvas');
 	canvas.id = '#canvas-' + String.fromCharCode(ll + 64) + cc + bid;
 	canvas.className = 'explosion_canvas';
@@ -260,6 +263,9 @@ function explosion(ll, cc, bid){
 function splash(ll, cc, bid){
 	$('#' + String.fromCharCode(ll + 64) + cc + bid).removeClass('can-hit');
 	
+	var snd = new Audio("media/splash.wav");
+	snd.play();
+
 	var canvas = document.createElement('canvas');
 	canvas.id = '#canvas-' + String.fromCharCode(ll + 64) + cc + bid;
 	canvas.className = 'splash_canvas';
@@ -544,6 +550,8 @@ function hit(e){
 	if(ancel_left === 0)
 		player_win = true;
 	if(r !== ''){
+		var snd = new Audio("media/destroyed.wav");
+		snd.play();
 		for(var i = 0; i < ships_list.length; i ++)
 			if(r === ships_list[i].id){
 				var div = document.createElement('div');
@@ -563,6 +571,8 @@ function hit(e){
 	if(player_left === 0)
 		ancel_win = true;
 	if(r !== ''){
+		var snd = new Audio("media/destroyed.wav");
+		snd.play();
 		for(var i = 0; i < ships_list.length; i ++)
 			if(r === ships_list[i].id){
 				var div = document.createElement('div');

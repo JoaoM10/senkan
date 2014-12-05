@@ -8,6 +8,8 @@
     this.setTab = function(newValue){
       this.tab = newValue;
       gameMode = 1;
+      if(this.tab === 3)
+        $('#hof-update').click();
     };
 
     this.isSet = function(tabName){
@@ -29,7 +31,6 @@
       {pos: 10, username: 'Ze', score: 74}
     ];
 
-    //****
   });
 
   app.controller('GameController', function(){
