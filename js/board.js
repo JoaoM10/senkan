@@ -214,6 +214,7 @@ function drop(e){
       $(dragObject).removeClass('rot90');
       $(dragObject).removeClass('mt70');
       $(dragObject).removeClass('mb70');
+      dragObject.removeEventListener('dblclick', rotateShip, false);
     }
   }
 
