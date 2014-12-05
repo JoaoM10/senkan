@@ -216,6 +216,88 @@ function init_game_ancel(){
 	}
 }
 
+function explosion(ll, cc, bid){
+	$('#' + String.fromCharCode(ll + 64) + cc + bid).removeClass('can-hit');
+
+	var canvas = document.createElement('canvas');
+	canvas.id = '#canvas-' + String.fromCharCode(ll + 64) + cc + bid;
+	canvas.className = 'explosion_canvas';
+	canvas.width = 25;
+	canvas.height = 25;
+	$('#' + String.fromCharCode(ll + 64) + cc + bid).html(canvas);
+
+	canvas = document.getElementById('#canvas-' + String.fromCharCode(ll + 64) + cc + bid);
+	var dr = canvas.getContext("2d");
+	var frame = 0;
+	var anim_id;
+
+	function explosion_anim() {
+		dr.clearRect(0, 0, 25, 25);
+		if(frame === 13){
+			clearInterval(anim_id);
+
+			var final_image = new Image();
+			final_image.src = 'media/hit.png';
+			final_image.className = 'hit';
+			final_image.onmousedown = function(event){
+				event.preventDefault();
+				return false;
+			};
+			$('#' + String.fromCharCode(ll + 64) + cc + bid).html(final_image);
+			return;
+		}
+		dr.drawImage(explosion_image, 39 * frame, 0, 39, 38, 0, 0, 25, 25);
+		frame ++;
+	}
+
+	var explosion_image = new Image();
+	explosion_image.onload = function(){
+		anim_id = setInterval(explosion_anim, 73);
+	};
+	explosion_image.src = "media/explosion.png";
+}
+
+function splash(ll, cc, bid){
+	$('#' + String.fromCharCode(ll + 64) + cc + bid).removeClass('can-hit');
+	
+	var canvas = document.createElement('canvas');
+	canvas.id = '#canvas-' + String.fromCharCode(ll + 64) + cc + bid;
+	canvas.className = 'splash_canvas';
+	canvas.width = 25;
+	canvas.height = 25;
+	$('#' + String.fromCharCode(ll + 64) + cc + bid).html(canvas);
+
+	canvas = document.getElementById('#canvas-' + String.fromCharCode(ll + 64) + cc + bid);
+	var dr = canvas.getContext("2d");
+	var frame = 0;
+	var anim_id;
+
+	function splash_anim() {
+		dr.clearRect(0, 0, 25, 25);
+		if(frame === 10){
+			clearInterval(anim_id);
+
+			var final_image = new Image();
+			final_image.src = 'media/water.png';
+			final_image.className = 'water';
+			final_image.onmousedown = function(event){
+				event.preventDefault();
+				return false;
+			};
+			$('#' + String.fromCharCode(ll + 64) + cc + bid).html(final_image);
+			return;
+		}
+		dr.drawImage(splash_image, 39 * frame, 0, 39, 38, 0, 0, 25, 25);
+		frame ++;
+	}
+
+	var splash_image = new Image();
+	splash_image.onload = function(){
+		anim_id = setInterval(splash_anim, 73);
+	};
+	splash_image.src = "media/splash.png";
+}
+
 function shot(pl, coord){
   	var line = coord.charCodeAt(0) - 64;
 	var column = parseInt(coord.substring(1));
@@ -231,15 +313,7 @@ function shot(pl, coord){
 			hts += 1;
 			$("#game-progress").attr('aria-valuenow', hts);
 			$('#game-progress').css('width', (hts * 6) + '%');
-
-        	var image = new Image();
-        	image.src = 'media/hit.png';
-        	image.className = 'hit';
-        	image.onmousedown = function(event){
-				event.preventDefault();
-				return false;
-			};
-			$('#' + String.fromCharCode(line + 64) + column + 'ancel-board').html(image);
+			explosion(line, column, 'ancel-board');
 			ancel_ships_state[ancel_board[line][column]] -= 1;
 			if(ancel_ships_state[ancel_board[line][column]] === 0){
 				ancel_left -= 1;
@@ -247,27 +321,13 @@ function shot(pl, coord){
 			}
 		}
 		else{
-        	var image = new Image();
-        	image.src = 'media/water.png';
-        	image.className = 'water';
-        	image.onmousedown = function(event){
-				event.preventDefault();
-				return false;
-			};
-			$('#' + String.fromCharCode(line + 64) + column + 'ancel-board').html(image);
+			splash(line, column, 'ancel-board');
 		}
 	}
 	else{
 
 		if(player_board[line][column] !== 0 && player_board[line][column] !== -1){
-        	var image = new Image();
-        	image.src = 'media/hit.png';
-        	image.className = 'hit';
-        	image.onmousedown = function(event){
-				event.preventDefault();
-				return false;
-			};
-			$('#' + String.fromCharCode(line + 64) + column + 'player-board').html(image);
+			explosion(line, column, 'player-board');
 			player_ships_state[player_board[line][column]] -= 1;
 			ancel_shots[line][column] = 2;
 			if(player_ships_state[player_board[line][column]] === 0){
@@ -281,15 +341,7 @@ function shot(pl, coord){
 			last_ancel_column = column;
 		}
 		else{
-        	var image = new Image();
-        	image.src = 'media/water.png';
-        	image.className = 'water';
-        	image.onmousedown = function(event){
-				event.preventDefault();
-				return false;
-			};
-			$('#' + String.fromCharCode(line + 64) + column + 'player-board').html(image);
-
+        	splash(line, column, 'player-board');
 			ancel_shots[line][column] = 1;
 			last_ancel_shot = 0;
 		}

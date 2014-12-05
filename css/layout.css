@@ -138,3 +138,22 @@ hr {
 	background-image: url("../media/aim.png") !important;
 	cursor: none;
 }
+
+.splash_canvas {
+	width: 30px;
+	height: 30px;
+	vertical-align: bottom;
+	line-height: 1px;
+}
+
+.explosion_canvas {
+	width: 30px;
+	height: 30px;
+	vertical-align: bottom;
+	line-height: 1px;	
+}
+
+.hit, .water {
+	width: 30px;
+	height: 30px;
+}
