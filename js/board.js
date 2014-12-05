@@ -71,15 +71,17 @@ function check_config_board(){
 }
 
 function rotateShip(e){
-  if($(this).hasClass('rot90')){
-    $(this).removeClass('rot90');
-    $(this).removeClass('mt70');
-    $(this).removeClass('mb70');
+  if($(this).hasClass('rot_ship')){
+    var ss = $(this).attr('src');
+    var ns = ss.substring(0, 17) + '.png';
+    $(this).attr("src", ns);
+    $(this).removeClass('rot_ship');
   }
   else{
-    $(this).addClass('rot90');
-    $(this).addClass('mt70');
-    $(this).addClass('mb70');
+    var ss = $(this).attr('src');
+    var ns = ss.substring(0, 17) + '_v.png';
+    $(this).attr("src", ns);
+    $(this).addClass('rot_ship');
   }
 }
 
@@ -95,7 +97,7 @@ function dragStart(e){
   e.dataTransfer.effectAllowed = 'move';
   e.dataTransfer.setData('image/png', this.innerHTML);
   var ifrot = '';
-  if($(this).hasClass('rot90'))
+  if($(this).hasClass('rot_ship'))
     ifrot = '_v';
   if($(this).hasClass('ship3_1') || $(this).hasClass('ship3_2'))
     dragIcon.src = 'media/ships/ship3' + ifrot + '.png';
@@ -145,7 +147,7 @@ function dragEnter(e){
   if(ship_size == 3)
     ship = $(dragObject).attr('class').substring(0,7);
   var orient = 'H';
-  if($(dragObject).hasClass('rot90'))
+  if($(dragObject).hasClass('rot_ship'))
     orient = 'V';
 
   if(check_ship_place(linec, column, ship_size, orient)){
@@ -174,7 +176,7 @@ function dragOver(e){
   if(ship_size == 3)
     ship = $(dragObject).attr('class').substring(0,7);
   var orient = 'H';
-  if($(dragObject).hasClass('rot90'))
+  if($(dragObject).hasClass('rot_ship'))
     orient = 'V';
 
   if(check_ship_place(linec, column, ship_size, orient))
@@ -204,16 +206,17 @@ function drop(e){
   if(ship_size == 3)
     ship = $(dragObject).attr('class').substring(0,7);
   var orient = 'H';
-  if($(dragObject).hasClass('rot90'))
+  if($(dragObject).hasClass('rot_ship'))
     orient = 'V';
 
   for(var i = 0; i < ships_list.length; i ++){
     if(ship === ships_list[i].id){
       ships_pos[ship] = orient + linec + column;
       place_ship('', config_board, ships_pos[ships_list[i].id], ships_list[i], true);
-      $(dragObject).removeClass('rot90');
-      $(dragObject).removeClass('mt70');
-      $(dragObject).removeClass('mb70');
+      var ss = $(dragObject).attr('src');
+      var ns = ss.substring(0, 17) + '.png';
+      $(dragObject).attr("src", ns);
+      $(dragObject).removeClass('rot_ship');
       dragObject.removeEventListener('dblclick', rotateShip, false);
     }
   }

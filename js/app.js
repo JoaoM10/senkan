@@ -18,6 +18,7 @@
   });
 
   app.controller('GameController', function(){
+    this.vs = 'Ancel';
 
     this.setMode = function(newValue){
       if(newValue === 4){
@@ -33,10 +34,19 @@
         }
       }
       gameMode = newValue;
-      if(gameMode === 2){
+      if(gameMode === 2 || gameMode === 3){
         $('#config-space').html('<div id="ships-wrapper"></div>');
         $(create_board('config-board', 1)).insertBefore('#ships-wrapper');
         $('#ships-wrapper').html(create_ships());
+        if(gameMode === 2){
+          this.vs = 'Ancel';
+          $('#config-vs').html('Playing against Ancel');
+        }
+        else{
+          this.vs = 'Online';
+          $('#config-vs').html('Playing online');
+        }
+        gameMode = 2;
       }
     };
 
