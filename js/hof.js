@@ -24,7 +24,7 @@ function hof_update(){
       tr.appendChild(td_un);
     
       var td_pt = document.createElement('td');
-      td_pt.appendChild(document.createTextNode(hof.ranking[i].shots));
+      td_pt.appendChild(document.createTextNode(100 - hof.ranking[i].shots));
       tr.appendChild(td_pt);
 
       $('#hof-body').append(tr);
