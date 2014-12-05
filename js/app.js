@@ -33,6 +33,10 @@
           init_game_ancel();
         }
       }
+      if(newValue === 3 && session_username === null){
+        alert("You need to sign in first!");
+        return;
+      }
       gameMode = newValue;
       if(gameMode === 2 || gameMode === 3){
         $('#config-space').html('<div id="ships-wrapper"></div>');

@@ -228,7 +228,7 @@
 					<h1>Sign In</h1>
 					<div class="row mt50">
 						<div class="col-md-4 col-md-offset-4 jumbotron">
-							<form role="form" onsubmit="login()" >
+							<form role="form" onsubmit="sign_in()" >
 								<div id="signin-feed"></div>
 								<div class="form-group">
 									<label for="username">Username</label>
@@ -242,6 +242,7 @@
 							</form>
 						</div>
 					</div>
+					<button id="go-sign-in" class="hidden" ng-click="tabCtr.setTab(5)"></button>
 				</section>
 			</div>
 			<footer class="text-center mt50">
