@@ -20,6 +20,11 @@ var last_ancel_column;
 var last_ancel_orient;
 var rand_parity;
 
+var game_id = null;
+var game_key = null;
+var game_vs = null;
+var game_turn = null;
+
 function getRandomInt(min, max){
 
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -601,5 +606,114 @@ function hit(e){
 		$('.final-score').html(score);
 		$('#show-lose').click();
 		return;
+	}
+}
+
+function join_game(){
+
+	var bb = [];
+	for(var i = 1; i <= 10; i ++){
+		var ll = [];
+		for(var j = 1; j <= 10; j ++){
+			if(config_board[i][j] !== 0 && config_board[i][j] !== -1)
+				ll.push(true);
+			else
+				ll.push(false);
+		}
+		bb.push(ll);
+	}
+
+	var params = JSON.stringify({
+		name: session_username,
+		pass: session_password,
+		board: bb
+	});
+
+	var req = new XMLHttpRequest();
+	req.open("post", "http://twserver.alunos.dcc.fc.up.pt:8000/join", true);
+	req.onreadystatechange = function(){
+		if(req.readyState != 4){ return; }
+		if(req.status != 200){ 
+			alert("There was an error communicating with the server!");
+			return;
+		}
+
+		var rsp = JSON.parse(req.responseText);
+
+		if(rsp.error === undefined){
+			game_id = rsp.game;
+			game_key = rsp.key;
+			play_online();
+		}
+		else{
+			alert("There was some error on your request! (73: " + rsp.error + ")");
+			$('#go-play-config-online').click();
+			return;	
+		}
+	}
+	req.send(params);
+}
+
+function play_online(){
+	game_vs = game_turn = null;
+
+	var sse = new EventSource('http://twserver.alunos.dcc.fc.up.pt:8000/update?name=' + session_username + '&game=' + game_id + '&key=' + game_key);
+	sse.onmessage = function(event){
+		rsp = JSON.parse(event.data);
+		if(rsp.error !== undefined){
+			alert("There was some error on your request! (42: " + rsp.error + ")");
+			$('#go-play-config-online').click();
+			event.target.close();
+			return;	
+		}
+		if(game_vs === null || game_turn === null){
+			game_vs = rsp.opponent;
+			game_turn = rsp.turn;			
+			$('#go-play-after-wait').click();
+		}
+		else{
+			// some shot i think...
+		}
+	};
+	// close connection
+}
+
+function init_game_online(){
+	player_board = new Array(12);
+	player_shots = new Array(12);
+	ancel_shots = new Array(12);
+	for(var i = 0; i <= 11; i++){
+		player_board[i] = new Array(12);
+		player_shots[i] = new Array(12);
+		ancel_shots[i] = new Array(12);
+		for(var j = 0; j <= 11; j ++){
+			player_board[i][j] = 0;
+			player_shots[i][j] = 0;
+			ancel_shots[i][j] = 0;
+		}
+	}
+
+	if(game_turn === session_username){
+		turn = 'Player';
+		$('#turn').html('You');	
+	}
+	else{
+		turn = game_turn;
+		$('#turn').html(game_vs);
+	}
+
+	score = 100;
+	$('#score').html('100');
+	$('#game-progress').attr('aria-valuenow', '0');
+	$('#game-progress').css('width', '0%');
+
+	player_left = ships_list.length;
+	ancel_left = ships_list.length;
+	player_ships_state = [];
+	ancel_ships_state = [];
+	for(var i = 0; i < ships_list.length; i ++){
+		place_ship('player-board', player_board, ships_pos[ships_list[i].id], ships_list[i], true);
+		player_ships_state[ships_list[i].id] = parseInt(ships_list[i].id[4]);
+		ancel_ships_state[ships_list[i].id] = parseInt(ships_list[i].id[4]);
 	}
 }

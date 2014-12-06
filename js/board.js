@@ -245,6 +245,13 @@ function dragEnd(e){
 }
 
 function random_config_board(){
-
   ships_pos = generate_ship_positions();
+  config_board = new Array(11);
+  for(var i = 1; i <= 10; i++){
+    config_board[i] = new Array(11);
+    for(var j = 1; j <= 10; j ++)
+      config_board[i][j] = 0;
+  }
+  for(var i = 0; i < ships_list.length; i ++)
+    place_ship('', config_board, ships_pos[ships_list[i].id], ships_list[i], false);
 }

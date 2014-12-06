@@ -107,9 +107,11 @@
 								<button class="btn btn-success btn-block" ng-click="gameCtr.setMode(4)">Start</button>
 							</div>
 						</div>
+						<button id="go-play-config-online" class="hidden" ng-click="gameCtr.setMode(3)"></button>
 					</div>
-					<div id="game-wait" class="row mt50 text-center" ng-show="gameCtr.isSet(3)">
-						Waiting for an opponent online...
+					<div id="game-wait" class="row mt50 text-center" ng-show="gameCtr.isSet(9)">
+						<h3>Waiting for an opponent online...</h3>
+						<img class="mt50" src="media/loading.gif" alt="loading">
 					</div>
 					<div id="game-play" class="row mt50 text-center" ng-show="gameCtr.isSet(4)">
 						<h3>Playing against Ancel</h3>
@@ -140,6 +142,7 @@
 							<div class="col-md-4" id="ancel-bspace"></div>
 						</div>
 						<div class="row mt20" id="game-feed"></div>
+						<button id="go-play-after-wait" class="hidden" ng-click="gameCtr.setMode(10)"></button>
 					</div>
 					<div id="game-give-up" class="row mt50 text-center" ng-show="gameCtr.isSet(5)">
 						<h3>Game Over!</h3>
