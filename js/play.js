@@ -744,15 +744,6 @@ function play_online(){
 			game_turn = rsp.turn;			
 			$('#go-play-after-wait').click();
 		}
-		else if(rsp.winner !== undefined){
-			$('.final-score').html(score);
-			if(rsp.winner === session_username)
-				$('#show-win').click();
-			else
-				$('#show-lose').click();
-			event.target.close();
-			return;
-		}
 		else if(rsp.left !== undefined){
 			$('.final-score').html(score);
 			if(rsp.left === session_username)
@@ -778,6 +769,16 @@ function play_online(){
 
 				turn = 'Player';
 				$('#turn').html('You');	
+			}
+
+			if(rsp.winner !== undefined){
+				$('.final-score').html(score);
+				if(rsp.winner === session_username)
+					$('#show-win').click();
+				else
+					$('#show-lose').click();
+				event.target.close();
+				return;
 			}
 		}
 	};
