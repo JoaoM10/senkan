@@ -114,7 +114,7 @@
 						<img class="mt50" src="media/loading.gif" alt="loading">
 					</div>
 					<div id="game-play" class="row mt50 text-center" ng-show="gameCtr.isSet(4)">
-						<h3>Playing against Ancel</h3>
+						<h3>Playing against <label for="opponent" id="play-vs" >Ancel</label></h3>
 						<div class="row">
 							<div class="col-md-10 col-md-offset-1 mt20">
 								<div class="progress">
@@ -153,7 +153,7 @@
 						</div>
 						<div class="row mt20">
 							<div class="col-md-2 col-md-offset-5">
-								<button class="btn btn-warning btn-block" ng-click="gameCtr.setMode(2)">Play again</button>
+								<button class="btn btn-warning btn-block" ng-click="gameCtr.setMode(1)">Play again</button>
 							</div>
 						</div>
 					</div>
@@ -167,7 +167,7 @@
 						</div>
 						<div class="row mt20">
 							<div class="col-md-2 col-md-offset-5">
-								<button class="btn btn-warning btn-block" ng-click="gameCtr.setMode(2)">Play again</button>
+								<button class="btn btn-warning btn-block" ng-click="gameCtr.setMode(1)">Play again</button>
 							</div>
 						</div>
 						<button id="show-win" class="hidden" ng-click="gameCtr.setMode(6)"></button>
@@ -182,7 +182,7 @@
 						</div>
 						<div class="row mt20">
 							<div class="col-md-2 col-md-offset-5">
-								<button class="btn btn-warning btn-block" ng-click="gameCtr.setMode(2)">Play again</button>
+								<button class="btn btn-warning btn-block" ng-click="gameCtr.setMode(1)">Play again</button>
 							</div>
 						</div>
 						<button id="show-lose" class="hidden" ng-click="gameCtr.setMode(7)"></button>

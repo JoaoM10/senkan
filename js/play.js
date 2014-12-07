@@ -20,6 +20,7 @@ var last_ancel_column;
 var last_ancel_orient;
 var rand_parity;
 
+var game_type = null;
 var game_id = null;
 var game_key = null;
 var game_vs = null;
@@ -201,6 +202,8 @@ function init_game_ancel(){
 	first_ancel_column = 0;
 	rand_parity = getRandomInt(0, 1);
 
+	game_type = 'Bot';
+	$('#play-vs').html('Ancel');
 	score = 100;
 	ancel_pos = generate_ship_positions();
 	turn = 'Player';
@@ -536,16 +539,7 @@ function ancel_bot(){
 	return ancel_bot_ai();
 }
 
-function hit(e){
-	e.preventDefault();
-  
-	var coord = $(this).attr('data-coord');
-  	var line = coord.charCodeAt(0) - 64;
-	var column = parseInt(coord.substring(1));
-
-	if(turn !== 'Player' || player_shots[line][column] !== 0)
-		return;
-
+function hit_bot(coord, line, column){
 	var player_win = false;
 	var ancel_win = false;
 
@@ -607,6 +601,51 @@ function hit(e){
 		$('#show-lose').click();
 		return;
 	}
+}
+
+function hit_online(coord, line, column){
+	var params = JSON.stringify({
+		name: session_username,
+		game: game_id,
+		key: game_key,
+		row: line,
+		col: column
+	});
+
+	var req = new XMLHttpRequest();
+	req.open("post", "http://twserver.alunos.dcc.fc.up.pt:8000/notify", true);
+	req.onreadystatechange = function(){
+		if(req.readyState != 4){ return; }
+		if(req.status != 200){ 
+			alert("There was an error communicating with the server!");
+			return;
+		}
+
+		var rsp = JSON.parse(req.responseText);
+		if(rsp.error !== undefined){
+			alert("There was an error: " + rsp.error);
+			return;
+		}
+
+		//***
+	}
+	req.send(params);
+}
+
+function hit(e){
+	e.preventDefault();
+  
+	var coord = $(this).attr('data-coord');
+  	var line = coord.charCodeAt(0) - 64;
+	var column = parseInt(coord.substring(1));
+
+	if(turn !== 'Player' || player_shots[line][column] !== 0)
+		return;
+
+	if(game_type === 'Online')
+		hit_online(coord, line, column);
+	else
+		hit_bot(coord, line, column);
 }
 
 function join_game(){
@@ -671,8 +710,13 @@ function play_online(){
 			game_turn = rsp.turn;			
 			$('#go-play-after-wait').click();
 		}
+		else if(rsp.left !== undefined){
+			
+
+
+		}
 		else{
-			// some shot i think...
+
 		}
 	};
 	// close connection
@@ -692,6 +736,9 @@ function init_game_online(){
 			ancel_shots[i][j] = 0;
 		}
 	}
+
+	game_type = 'Online';
+	$('#play-vs').html(game_vs);
 
 	if(game_turn === session_username){
 		turn = 'Player';
