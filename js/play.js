@@ -11,6 +11,7 @@ var score;
 var targets;
 
 var dirs = [[0, +1], [+1, 0], [0, -1], [-1, 0]];
+var diags = [[-1, -1], [-1, +1], [+1, -1], [+1, +1]];
 var striking_mode;
 var first_ancel_line;
 var first_ancel_column;
@@ -86,8 +87,12 @@ function generate_ship_positions(){
     			ck[line - 1][column + j] = 1;
     			ck[line + 1][column + j] = 1;
     		}
+    		ck[line - 1][column - 1] = 1;
     		ck[line][column - 1] = 1;
+    		ck[line + 1][column - 1] = 1;
+    		ck[line - 1][column + ship_size] = 1;
     		ck[line][column + ship_size] = 1;
+    		ck[line + 1][column + ship_size] = 1;
 		}
 		else{
     		for(var j = 0; j < ship_size; j ++){
@@ -98,7 +103,11 @@ function generate_ship_positions(){
     			ck[line + j][column + 1] = 1;
     		}
     		ck[line - 1][column] = 1;
+    		ck[line - 1][column - 1] = 1;
+    		ck[line - 1][column + 1] = 1;
     		ck[line + ship_size][column] = 1;
+    		ck[line + ship_size][column - 1] = 1;
+    		ck[line + ship_size][column + 1] = 1;
 		}
     }
 	
@@ -118,33 +127,24 @@ function place_ship(bid, bboard, pos, ship, vis){
 			bboard[line][column + i] = ship.id;
 
 		// Dont allow adjacent ships
-		if(line > 1)
-			for(var i = 0; i < ship_size; i ++)
-				bboard[line - 1][column + i] = -1;
-		if(line < 10)
-			for(var i = 0; i < ship_size; i ++)
-				bboard[line + 1][column + i] = -1;
-		if(column > 1)
-			bboard[line][column - 1] = -1;
-		if(column + ship_size - 1 < 10)
-			bboard[line][column + ship_size] = -1;
+		for(var i = -1; i <= ship_size; i ++)
+			bboard[line - 1][column + i] = -1;
+		for(var i = -1; i <= ship_size; i ++)
+			bboard[line + 1][column + i] = -1;
+		bboard[line][column - 1] = -1;
+		bboard[line][column + ship_size] = -1;
 	}
 	else{
 		for(var i = 0; i < ship_size; i ++)
 			bboard[line + i][column] = ship.id;
 
 		// Dont allow adjacent ships
-		if(column > 1)
-			for(var i = 0; i < ship_size; i ++)
-				bboard[line + i][column - 1] = -1;
-		if(column < 10)
-			for(var i = 0; i < ship_size; i ++)
-				bboard[line + i][column + 1] = -1;
-
-		if(line > 1)
-			bboard[line - 1][column] = -1;
-		if(line + ship_size - 1 < 10)
-			bboard[line + ship_size][column] = -1;
+		for(var i = -1; i <= ship_size; i ++)
+			bboard[line + i][column - 1] = -1;
+		for(var i = -1; i <= ship_size; i ++)
+			bboard[line + i][column + 1] = -1;
+		bboard[line - 1][column] = -1;
+		bboard[line + ship_size][column] = -1;
 	}
 	
 	if(vis){
@@ -384,6 +384,9 @@ function ancel_bot_ai_test_pos(ll, cc, dd){
 	for(var i = 0; i < 4; i ++)
 		if(ancel_shots[ll + dirs[i][0]][cc + dirs[i][1]] === 2 && i !== ((dd + 2) % 4))
 			return false;
+	for(var i = 0; i < 4; i ++)
+		if(ancel_shots[ll + diags[i][0]][cc + diags[i][1]] === 2)
+			return false;
 	return true;
 }
 
@@ -432,7 +435,7 @@ function ancel_bot_ai(){
 	    				if(c + ship_size - 1 <= 10){
 	    					var tk = true;
 	    					for(var j = 0; j < ship_size; j ++)
-	    						if(ancel_shots[l][c + j] !== 0 || ancel_shots[l - 1][c + j] === 2 || ancel_shots[l][c + j - 1] === 2 || ancel_shots[l + 1][c + j] === 2 || ancel_shots[l][c + j + 1] === 2)
+	    						if(ancel_shots[l][c + j] !== 0 || ancel_shots[l - 1][c + j] === 2 || ancel_shots[l][c + j - 1] === 2 || ancel_shots[l + 1][c + j] === 2 || ancel_shots[l][c + j + 1] === 2 || ancel_shots[l - 1][c + j - 1] === 2 || ancel_shots[l - 1][c + j + 1] === 2 || ancel_shots[l + 1][c + j - 1] === 2 || ancel_shots[l + 1][c + j + 1] === 2)
 	    							tk = false;
 	    					if(tk){
 	    						for(var j = 0; j < ship_size; j ++)
@@ -444,7 +447,7 @@ function ancel_bot_ai(){
 	    				for(var c = 1; c <= 10; c ++){
 	    					var tk = true;
 	    					for(var j = 0; j < ship_size; j ++)
-	    						if(ancel_shots[l + j][c] !== 0 || ancel_shots[l + j - 1][c] === 2 || ancel_shots[l + j + 1][c] === 2 || ancel_shots[l + j][c - 1] === 2 || ancel_shots[l + j][c + 1] === 2)
+	    						if(ancel_shots[l + j][c] !== 0 || ancel_shots[l + j - 1][c] === 2 || ancel_shots[l + j + 1][c] === 2 || ancel_shots[l + j][c - 1] === 2 || ancel_shots[l + j][c + 1] === 2 || ancel_shots[l + j - 1][c - 1] === 2 || ancel_shots[l + j - 1][c + 1] === 2 || ancel_shots[l + j + 1][c - 1] === 2 || ancel_shots[l + j + 1][c + 1] === 2)
 	    							tk = false;
 	    					if(tk){
 	    						for(var j = 0; j < ship_size; j ++)
@@ -519,13 +522,13 @@ function ancel_bot_ai(){
 	}
 	else{ // striking_mode = 2
 		// continue striking may need to invert direction
-		if(ancel_shots[last_ancel_line + dirs[last_ancel_orient][0]][last_ancel_column + dirs[last_ancel_orient][1]] !== 0 || last_ancel_shot === 0 || (last_ancel_line + dirs[last_ancel_orient][0]) < 1 || (last_ancel_line + dirs[last_ancel_orient][0]) > 10 || (last_ancel_column + dirs[last_ancel_orient][1]) < 1 || (last_ancel_column + dirs[last_ancel_orient][1]) > 10){
+		if(!ancel_bot_ai_test_pos(last_ancel_line + dirs[last_ancel_orient][0], last_ancel_column + dirs[last_ancel_orient][1], last_ancel_orient)){
 			// invert dir
 			last_ancel_line = first_ancel_line;
 			last_ancel_column = first_ancel_column;
 			last_ancel_orient = (last_ancel_orient + 2) % 4;
 		}
-		
+
 		line = last_ancel_line + dirs[last_ancel_orient][0];
 		column = last_ancel_column + dirs[last_ancel_orient][1];
 	}
@@ -751,7 +754,11 @@ function play_online(){
 			return;
 		}
 		else if(rsp.left !== undefined){
-			alert(rsp.left + " left!");
+			$('.final-score').html(score);
+			if(rsp.left === session_username)
+				$('#show-lose').click();
+			else
+				$('#show-win').click();
 			event.target.close();
 			return;
 		}

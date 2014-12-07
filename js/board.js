@@ -23,10 +23,10 @@ function create_board(id, wl){
   }
   table.appendChild(tr);
   if(wl === 1){
-    config_board = new Array(11);
-    for(var i = 1; i <= 10; i++){
-      config_board[i] = new Array(11);
-      for(var j = 1; j <= 10; j ++)
+    config_board = new Array(12);
+    for(var i = 0; i <= 11; i++){
+      config_board[i] = new Array(12);
+      for(var j = 0; j <= 11; j ++)
         config_board[i][j] = 0;
     }
     ships_pos = new Array();
@@ -246,10 +246,10 @@ function dragEnd(e){
 
 function random_config_board(){
   ships_pos = generate_ship_positions();
-  config_board = new Array(11);
-  for(var i = 1; i <= 10; i++){
-    config_board[i] = new Array(11);
-    for(var j = 1; j <= 10; j ++)
+  config_board = new Array(12);
+  for(var i = 0; i <= 11; i++){
+    config_board[i] = new Array(12);
+    for(var j = 0; j <= 11; j ++)
       config_board[i][j] = 0;
   }
   for(var i = 0; i < ships_list.length; i ++)
