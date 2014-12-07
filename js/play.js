@@ -693,12 +693,43 @@ function join_game(){
 	req.send(params);
 }
 
+function shot_online(pl, line, column, wh){
+	if(pl === 'Player'){
+		if(player_shots[line][column] === 0){
+			score -= 1;
+			$("#score").html(score);
+			
+			player_shots[line][column] = 1;
+
+			if(wh){
+				var hts = parseInt($("#game-progress").attr('aria-valuenow'));
+				hts += 1;
+				$("#game-progress").attr('aria-valuenow', hts);
+				$('#game-progress').css('width', (hts * 6) + '%');
+				explosion(line, column, 'ancel-board');
+			}
+			else
+				splash(line, column, 'ancel-board');
+		}
+	}
+	else{
+		if(ancel_shots[line][column] === 0){
+			ancel_shots[line][column] = 1;
+			if(wh)
+				explosion(line, column, 'player-board');
+			else
+	        	splash(line, column, 'player-board');
+    	}
+	}
+}
+
 function play_online(){
 	game_vs = game_turn = null;
 
 	var sse = new EventSource('http://twserver.alunos.dcc.fc.up.pt:8000/update?name=' + session_username + '&game=' + game_id + '&key=' + game_key);
 	sse.onmessage = function(event){
 		rsp = JSON.parse(event.data);
+		//alert(JSON.stringify(rsp, null, 2));
 		if(rsp.error !== undefined){
 			alert("There was some error on your request! (42: " + rsp.error + ")");
 			$('#go-play-config-online').click();
@@ -710,30 +741,53 @@ function play_online(){
 			game_turn = rsp.turn;			
 			$('#go-play-after-wait').click();
 		}
+		else if(rsp.winner !== undefined){
+			$('.final-score').html(score);
+			if(rsp.winner === session_username)
+				$('#show-win').click();
+			else
+				$('#show-lose').click();
+			event.target.close();
+			return;
+		}
 		else if(rsp.left !== undefined){
-			
-
-
+			alert(rsp.left + " left!");
+			event.target.close();
+			return;
 		}
 		else{
+			var ll = rsp.move.row + 1;
+			var cc = rsp.move.col + 1;
+			var hh = rsp.move.hit;
 
+			if(rsp.move.name === session_username){
+				shot_online('Player', ll, cc, hh);
+
+				turn = game_turn;
+				$('#turn').html(game_vs);
+			}
+			else{
+				shot_online(game_vs, ll, cc, hh);
+
+				turn = 'Player';
+				$('#turn').html('You');	
+			}
 		}
 	};
-	// close connection
 }
 
 function init_game_online(){
-	player_board = new Array(12);
 	player_shots = new Array(12);
 	ancel_shots = new Array(12);
+	player_board = new Array(12);
 	for(var i = 0; i <= 11; i++){
-		player_board[i] = new Array(12);
 		player_shots[i] = new Array(12);
 		ancel_shots[i] = new Array(12);
+		player_board[i] = new Array(12);
 		for(var j = 0; j <= 11; j ++){
-			player_board[i][j] = 0;
 			player_shots[i][j] = 0;
 			ancel_shots[i][j] = 0;
+			player_board[i][j] = 0;
 		}
 	}
 
@@ -754,13 +808,6 @@ function init_game_online(){
 	$('#game-progress').attr('aria-valuenow', '0');
 	$('#game-progress').css('width', '0%');
 
-	player_left = ships_list.length;
-	ancel_left = ships_list.length;
-	player_ships_state = [];
-	ancel_ships_state = [];
-	for(var i = 0; i < ships_list.length; i ++){
+	for(var i = 0; i < ships_list.length; i ++)
 		place_ship('player-board', player_board, ships_pos[ships_list[i].id], ships_list[i], true);
-		player_ships_state[ships_list[i].id] = parseInt(ships_list[i].id[4]);
-		ancel_ships_state[ships_list[i].id] = parseInt(ships_list[i].id[4]);
-	}
 }
