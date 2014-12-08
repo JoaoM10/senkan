@@ -893,13 +893,19 @@ function is_playing_online(){
 	return (game_id !== null);
 }
 
-//*****
+function ship_on_pos(bboard, line, column){
+	if(line < 1 || line > 10)
+		return false;
+	if(column < 1 || column > 10)
+		return false;
+	return (bboard[line][column] !== 0 && bboard[line][column] !== -1);
+}
 
 function is_adjacent_ship(bboard, line, column){
 	for(var i = 0; i < 4; i ++)
-		if(bboard[line + dirs[i][0]][column + dirs[i][1]] !== 0 && bboard[line + dirs[i][0]][column + dirs[i][1]] !== -1)
+		if(ship_on_pos(bboard, line + dirs[i][0], column + dirs[i][1]))
 			return true;
-		else if(bboard[line + diags[i][0]][column + diags[i][1]] !== 0 && bboard[line + diags[i][0]][column + diags[i][1]] !== -1)
+		else if(ship_on_pos(bboard, line + diags[i][0], column + diags[i][1]))
 			return true;
 	return false;
 }
