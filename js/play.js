@@ -204,6 +204,7 @@ function init_game_ancel(){
 
 	game_type = 'Bot';
 	$('#play-vs').html('Ancel');
+	$('#give-up-area').show();
 	score = 100;
 	ancel_pos = generate_ship_positions();
 	turn = 'Player';
@@ -732,10 +733,13 @@ function play_online(){
 	var sse = new EventSource('http://twserver.alunos.dcc.fc.up.pt:8000/update?name=' + session_username + '&game=' + game_id + '&key=' + game_key);
 	sse.onmessage = function(event){
 		rsp = JSON.parse(event.data);
+		
 		//alert(JSON.stringify(rsp, null, 2));
+		
 		if(rsp.error !== undefined){
 			alert("There was some error on your request! (42: " + rsp.error + ")");
 			$('#go-play-config-online').click();
+			game_id = game_key = null;
 			event.target.close();
 			return;	
 		}
@@ -750,6 +754,7 @@ function play_online(){
 				$('#show-lose').click();
 			else
 				$('#show-win').click();
+			game_id = game_key = null;
 			event.target.close();
 			return;
 		}
@@ -777,6 +782,7 @@ function play_online(){
 					$('#show-win').click();
 				else
 					$('#show-lose').click();
+				game_id = game_key = null;
 				event.target.close();
 				return;
 			}
@@ -801,7 +807,7 @@ function init_game_online(){
 
 	game_type = 'Online';
 	$('#play-vs').html(game_vs);
-
+	$('#give-up-area').hide();
 	if(game_turn === session_username){
 		turn = 'Player';
 		$('#turn').html('You');	
@@ -818,4 +824,38 @@ function init_game_online(){
 
 	for(var i = 0; i < ships_list.length; i ++)
 		place_ship('player-board', player_board, ships_pos[ships_list[i].id], ships_list[i], true);
+}
+
+function stop_game_online(){
+	if(game_id === null)
+		return;
+
+	var params = JSON.stringify({
+		name: session_username,
+		key: game_key,
+		game: game_id
+	});
+
+	var req = new XMLHttpRequest();
+	req.open("post", "http://twserver.alunos.dcc.fc.up.pt:8000/leave", true);
+	req.onreadystatechange = function(){
+		if(req.readyState != 4){ return; }
+		if(req.status != 200){
+			alert("There was an error communicating with the server!");
+			return;
+		}
+
+		var rsp = JSON.parse(req.responseText);
+
+		if(rsp.error !== undefined){
+			alert("There was some error stopping the game! (" + rsp.error + ")");
+			return;
+		}
+	}
+	req.send(params);
+	game_id = game_key = null;
+}
+
+function is_playing_online(){
+	return (game_id !== null);
 }

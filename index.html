@@ -111,7 +111,16 @@
 					</div>
 					<div id="game-wait" class="row mt50 text-center" ng-show="gameCtr.isSet(9)">
 						<h3>Waiting for an opponent online...</h3>
-						<img class="mt50" src="media/loading.gif" alt="loading">
+						<div class="row">
+							<div class="col-md-4 col-md-offset-4">
+								<img class="mt50" src="media/loading.gif" alt="loading">
+							</div>
+						</div>
+						<div class="row mt50">
+							<div class="col-md-2 col-md-offset-5">
+								<button class="btn btn-warning btn-block" ng-click="gameCtr.stopWaiting()">Stop waiting</button>
+							</div>
+						</div>
 					</div>
 					<div id="game-play" class="row mt50 text-center" ng-show="gameCtr.isSet(4)">
 						<h3>Playing against <label for="opponent" id="play-vs" >Ancel</label></h3>
@@ -129,7 +138,7 @@
 								<div class="row">
 									<h3>Score:<br><span id="score">100</span></h3>
 								</div>
-								<div class="row mt20">
+								<div class="row mt20" id="give-up-area">
 									<a href="#/give-up" class="btn btn-warning btn-block" ng-click="gameCtr.setMode(5)">Give Up</a>
 								</div>
 								<div class="row mt20">
@@ -153,7 +162,7 @@
 						</div>
 						<div class="row mt20">
 							<div class="col-md-2 col-md-offset-5">
-								<button class="btn btn-warning btn-block" ng-click="gameCtr.setMode(1)">Play again</button>
+								<button id="go-play-home" class="btn btn-warning btn-block" ng-click="gameCtr.setMode(1)">Play again</button>
 							</div>
 						</div>
 					</div>

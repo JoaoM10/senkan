@@ -7,6 +7,10 @@
     this.tab = 1;
 
     this.setTab = function(newValue){
+      if(is_playing_online()){
+        alert("You can't leave the game!");
+        return;
+      }
       this.tab = newValue;
       gameMode = 1;
       vs = 'Ancel';
@@ -20,7 +24,6 @@
   });
 
   app.controller('GameController', function(){
-    this.wfo = false;
 
     this.setMode = function(newValue){
       var aw = false;
@@ -48,7 +51,6 @@
               init_game_online();
             }
             else{
-              this.wfo = true;
               newValue = 9;
               join_game();
             }
@@ -83,6 +85,11 @@
     this.randomConfig = function(){
       random_config_board();
       this.setMode(4);
+    };
+
+    this.stopWaiting = function(){
+      stop_game_online();
+      this.setMode(1);
     };
   });
 
