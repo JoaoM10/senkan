@@ -27,6 +27,30 @@ var game_key = null;
 var game_vs = null;
 var game_turn = null;
 
+var sound_on = true;
+
+function turn_on_sound(){
+	$('#sound-img').attr("src", 'media/sound_on.png');
+	sound_on = true;
+	setCookie('sound_on', 'true', 2);
+}
+
+function turn_off_sound(){
+	$('#sound-img').attr("src", 'media/sound_off.png');
+	sound_on = false;
+	setCookie('sound_on', 'false', 2);
+}
+
+$(document).ready(function(){
+	var so = getCookie('sound_on');
+	if(so !== ""){
+		if(so === 'true')
+			turn_on_sound();
+		else
+			turn_off_sound();
+	}
+});
+
 function getRandomInt(min, max){
 
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -228,8 +252,10 @@ function init_game_ancel(){
 function explosion(ll, cc, bid){
 	$('#' + String.fromCharCode(ll + 64) + cc + bid).removeClass('can-hit');
 
-	var snd = new Audio("media/explosion.wav");
-	snd.play();
+	if(sound_on){
+		var snd = new Audio("media/explosion.wav");
+		snd.play();
+	}
 
 	var canvas = document.createElement('canvas');
 	canvas.id = '#canvas-' + String.fromCharCode(ll + 64) + cc + bid;
@@ -272,8 +298,10 @@ function explosion(ll, cc, bid){
 function splash(ll, cc, bid){
 	$('#' + String.fromCharCode(ll + 64) + cc + bid).removeClass('can-hit');
 	
-	var snd = new Audio("media/splash.wav");
-	snd.play();
+	if(sound_on){
+		var snd = new Audio("media/splash.wav");
+		snd.play();
+	}
 
 	var canvas = document.createElement('canvas');
 	canvas.id = '#canvas-' + String.fromCharCode(ll + 64) + cc + bid;
@@ -553,8 +581,10 @@ function hit_bot(coord, line, column){
 	if(ancel_left === 0)
 		player_win = true;
 	if(r !== ''){
-		var snd = new Audio("media/destroyed.wav");
-		snd.play();
+		if(sound_on){
+			var snd = new Audio("media/destroyed.wav");
+			snd.play();
+		}
 		for(var i = 0; i < ships_list.length; i ++)
 			if(r === ships_list[i].id){
 				var div = document.createElement('div');
@@ -574,8 +604,10 @@ function hit_bot(coord, line, column){
 	if(player_left === 0)
 		ancel_win = true;
 	if(r !== ''){
-		var snd = new Audio("media/destroyed.wav");
-		snd.play();
+		if(sound_on){
+			var snd = new Audio("media/destroyed.wav");
+			snd.play();
+		}
 		for(var i = 0; i < ships_list.length; i ++)
 			if(r === ships_list[i].id){
 				var div = document.createElement('div');

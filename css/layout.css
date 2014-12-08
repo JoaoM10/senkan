@@ -32,6 +32,10 @@ hr {
 	width: 100%;
 }
 
+.mx-width {
+	max-width: 100%;
+}
+
 .rot90 {
 	transform:          rotate(270deg);
 	-ms-transform:      rotate(270deg);

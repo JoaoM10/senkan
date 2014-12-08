@@ -91,6 +91,14 @@
       stop_game_online();
       this.setMode(1);
     };
+
+    this.soundToggle = function(){
+      if(sound_on)
+        turn_off_sound();
+      else
+        turn_on_sound();
+    };
+
   });
 
 
