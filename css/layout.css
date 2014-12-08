@@ -138,6 +138,11 @@ hr {
 	user-drag: none;
 }
 
+#ships-wrapper img.used:hover {
+	opacity: 1.0;
+	cursor: move;
+}
+
 .can-hit:hover {
 	background-image: url("../media/aim.png") !important;
 	cursor: none;

@@ -889,5 +889,69 @@ function stop_game_online(){
 }
 
 function is_playing_online(){
+	
 	return (game_id !== null);
+}
+
+//*****
+
+function is_adjacent_ship(bboard, line, column){
+	for(var i = 0; i < 4; i ++)
+		if(bboard[line + dirs[i][0]][column + dirs[i][1]] !== 0 && bboard[line + dirs[i][0]][column + dirs[i][1]] !== -1)
+			return true;
+		else if(bboard[line + diags[i][0]][column + diags[i][1]] !== 0 && bboard[line + diags[i][0]][column + diags[i][1]] !== -1)
+			return true;
+	return false;
+}
+
+function remove_ship(bid, bboard, pos, ship, vis){
+	var orient = pos[0];
+  	var linec = pos[1];
+  	var line = linec.charCodeAt(0) - 64;
+	var column = parseInt(pos.substring(2));
+	var ship_size = parseInt(ship.id.substring(4, 5));
+	
+	if(orient === 'H'){
+		for(var i = 0; i < ship_size; i ++)
+			bboard[line][column + i] = 0;
+
+		// restore adjacent positions
+		for(var i = -1; i <= ship_size; i ++)
+			if(!is_adjacent_ship(bboard, line - 1, column + i))
+				bboard[line - 1][column + i] = 0;
+		for(var i = -1; i <= ship_size; i ++)
+			if(!is_adjacent_ship(bboard, line + 1, column + i))
+				bboard[line + 1][column + i] = 0;
+		if(!is_adjacent_ship(bboard, line, column - 1))
+			bboard[line][column - 1] = 0;
+		if(!is_adjacent_ship(bboard, line, column + ship_size))
+			bboard[line][column + ship_size] = 0;
+	}
+	else{
+		for(var i = 0; i < ship_size; i ++)
+			bboard[line + i][column] = 0;
+
+		// restore adjacent positions
+		for(var i = -1; i <= ship_size; i ++)
+			if(!is_adjacent_ship(bboard, line + i, column - 1))
+				bboard[line + i][column - 1] = 0;
+		for(var i = -1; i <= ship_size; i ++)
+			if(!is_adjacent_ship(bboard, line + i, column + 1))
+				bboard[line + i][column + 1] = 0;
+		if(!is_adjacent_ship(bboard, line - 1, column))
+			bboard[line - 1][column] = 0;
+		if(!is_adjacent_ship(bboard, line + ship_size, column))
+			bboard[line + ship_size][column] = 0;
+	}
+	
+	if(vis){
+		if(orient === 'H'){
+			for(var i = 0; i < ship_size; i ++)
+				$('#' + linec + (column + i) + bid).html('');
+		}
+		else{
+			for(var i = 0; i < ship_size; i ++)
+				$('#' + String.fromCharCode(linec.charCodeAt(0) + i) + column + bid).html('');
+		}
+	}
 }

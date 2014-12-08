@@ -218,6 +218,7 @@ function drop(e){
       $(dragObject).attr("src", ns);
       $(dragObject).removeClass('rot_ship');
       dragObject.removeEventListener('dblclick', rotateShip, false);
+      dragObject.addEventListener('click', restoreShip, false);
     }
   }
 
@@ -254,4 +255,28 @@ function random_config_board(){
   }
   for(var i = 0; i < ships_list.length; i ++)
     place_ship('', config_board, ships_pos[ships_list[i].id], ships_list[i], false);
+}
+
+function restoreShip(){
+  var ship = $(this).attr('class').substring(0,5);
+  var ship_size = parseInt(ship.substring(4, 5));
+  if(ship_size == 3)
+    ship = $(this).attr('class').substring(0,7);
+  for(var i = 0; i < ships_list.length; i ++)
+    if(ship === ships_list[i].id){
+      remove_ship('', config_board, ships_pos[ships_list[i].id], ships_list[i], true);
+      ships_pos[ship] = null;
+
+      var image = new Image();
+      image.src = ships_list[i].url;
+      image.className = ships_list[i].id;
+      image.setAttribute('draggable', 'true');
+      image.addEventListener('dragstart', dragStart, false);
+      image.addEventListener('dblclick', rotateShip, false);
+
+      $('#ship_area_' + i).html('');
+      $('#ship_area_' + i).append(document.createTextNode(ships_list[i].name + ':'));
+      $('#ship_area_' + i).append(document.createElement('br'));
+      $('#ship_area_' + i).append(image);
+    }
 }

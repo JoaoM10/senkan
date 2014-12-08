@@ -41,6 +41,7 @@ function create_ships(){
   for(var i = 0; i < ships_list.length; i ++){
     var ship = ships_list[i];
     var div = document.createElement('div');
+    div.id = 'ship_area_' + i;
     div.className = 'text-left ship-area';
     div.appendChild(document.createTextNode(ship.name + ':'));
     div.appendChild(document.createElement('br'));
