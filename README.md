@@ -18,7 +18,7 @@ Web client for Senkan (the greatest battleship game ever).
 
 You just need to download the repository to your web server:
 ```
-$ git clone https://github.com/JoaoM10/senkan-server.git
+$ git clone https://github.com/JoaoM10/senkan.git
 ```
 
 And then enter the right server url in <repo_dir>/js/app.js
