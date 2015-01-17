@@ -649,7 +649,8 @@ function hit_online(coord, line, column){
 	});
 
 	var req = new XMLHttpRequest();
-	req.open("post", "http://twserver.alunos.dcc.fc.up.pt:8000/notify", true);
+	req.open("post", SERVER_URL() + "/notify", true);
+	req.setRequestHeader("Content-type", "application/json");
 	req.onreadystatechange = function(){
 		if(req.readyState != 4){ return; }
 		if(req.status != 200){ 
@@ -705,7 +706,8 @@ function join_game(){
 	});
 
 	var req = new XMLHttpRequest();
-	req.open("post", "http://twserver.alunos.dcc.fc.up.pt:8000/join", true);
+	req.open("post", SERVER_URL() + "/join", true);
+	req.setRequestHeader("Content-type", "application/json");
 	req.onreadystatechange = function(){
 		if(req.readyState != 4){ return; }
 		if(req.status != 200){ 
@@ -759,10 +761,12 @@ function shot_online(pl, line, column, wh){
 	}
 }
 
+var sse = null;
+
 function play_online(){
 	game_vs = game_turn = null;
 
-	var sse = new EventSource('http://twserver.alunos.dcc.fc.up.pt:8000/update?name=' + session_username + '&game=' + game_id + '&key=' + game_key);
+	sse = new EventSource(SERVER_URL() + '/update?name=' + session_username + '&game=' + game_id + '&key=' + game_key);
 	sse.onmessage = function(event){
 		rsp = JSON.parse(event.data);
 		
@@ -791,8 +795,8 @@ function play_online(){
 			return;
 		}
 		else{
-			var ll = rsp.move.row + 1;
-			var cc = rsp.move.col + 1;
+			var ll = rsp.move.row;
+			var cc = rsp.move.col;
 			var hh = rsp.move.hit;
 
 			if(rsp.move.name === session_username){
@@ -869,7 +873,8 @@ function stop_game_online(){
 	});
 
 	var req = new XMLHttpRequest();
-	req.open("post", "http://twserver.alunos.dcc.fc.up.pt:8000/leave", true);
+	req.open("post", SERVER_URL() + "/leave", true);
+	req.setRequestHeader("Content-type", "application/json");
 	req.onreadystatechange = function(){
 		if(req.readyState != 4){ return; }
 		if(req.status != 200){
@@ -886,6 +891,7 @@ function stop_game_online(){
 	}
 	req.send(params);
 	game_id = game_key = null;
+	sse.close();
 }
 
 function is_playing_online(){

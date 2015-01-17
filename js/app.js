@@ -104,3 +104,5 @@
 
 
 })();
+
+function SERVER_URL() { return "http://senkan-server-180501.euw1-2.nitrousbox.com:8080"; };

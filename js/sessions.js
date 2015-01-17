@@ -26,7 +26,8 @@ function login(un, pw, se){
 	});
 
 	var req = new XMLHttpRequest();
-	req.open("post", "http://twserver.alunos.dcc.fc.up.pt:8000/register", true);
+	req.open("post", SERVER_URL() + "/register", true);
+	req.setRequestHeader("Content-type", "application/json");
 	req.onreadystatechange = function(){
 		if(req.readyState != 4){ return; }
 		if(req.status != 200){ 

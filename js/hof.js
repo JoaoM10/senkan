@@ -2,7 +2,8 @@
 function hof_update(){
 
   var req = new XMLHttpRequest();
-  req.open("post", "http://twserver.alunos.dcc.fc.up.pt:8000/ranking", true);
+  req.open("post", SERVER_URL() + "/ranking", true);
+  req.setRequestHeader("Content-type", "application/json");
   req.onreadystatechange = function(){
     if(req.readyState != 4){ return; }
     if(req.status != 200){ 
